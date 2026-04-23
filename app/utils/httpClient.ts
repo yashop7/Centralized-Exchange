@@ -87,7 +87,7 @@ export async function getKlines(market: string, interval: string, startTime: num
   try {
     const endpoint = market === 'TATA_INR'
       ? `${BASE_URL}/klines?market=${market}&interval=${interval}&startTime=${startTime}&endTime=${endTime}`
-      : `/api/v1/klines?symbol=${market}&interval=${interval}&startTime=${startTime}&endTime=${endTime}`;
+      : `${BASE_URL}/klines?symbol=${market}&interval=${interval}&startTime=${startTime}&endTime=${endTime}`;
     const response = await fetch(endpoint);
     if (!response.ok) {
       if (response.status === 429) throw new RateLimitError("Chart data rate limit reached. Try again shortly.", 30);
