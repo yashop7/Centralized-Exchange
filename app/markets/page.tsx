@@ -222,16 +222,16 @@ export default function Component() {
         </div>
 
         {/* ── STATS STRIP ──────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
           {[
             { label: "24h Volume",     value: "$84.2B",  delta: "+6.4%",  up: true  },
             { label: "Market Cap",     value: "$2.41T",  delta: "+2.1%",  up: true  },
             { label: "Active Markets", value: "1,248",   delta: "Live",   up: true  },
             { label: "BTC Dominance",  value: "52.3%",   delta: "-0.4%",  up: false },
           ].map(({ label, value, delta, up }) => (
-            <div key={label} className="rounded-xl border border-white/10 bg-[#0a0a0a] px-5 py-4">
-              <p className="text-[9px] font-medium uppercase tracking-widest text-white/30 mb-1.5">{label}</p>
-              <p className="font-mono text-lg font-semibold text-white tabular-nums">{value}</p>
+            <div key={label} className="rounded-xl border border-white/10 bg-[#0a0a0a] px-3 sm:px-5 py-3 sm:py-4">
+              <p className="text-[9px] font-medium uppercase tracking-widest text-white/30 mb-1">{label}</p>
+              <p className="font-mono text-base sm:text-lg font-semibold text-white tabular-nums">{value}</p>
               <p className={`font-mono text-[10px] mt-0.5 ${up ? "text-[#22c55e]" : "text-[#ef4444]"}`}>{delta}</p>
             </div>
           ))}
@@ -266,10 +266,10 @@ export default function Component() {
         </div>
 
         {/* ── THREE-PANEL GRID ──────────────────────────────────────── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" id="markets">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4" id="markets">
           {panels.map(({ label, icon, items }) => (
             <div key={label} className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
-              <div className="flex items-center justify-between px-5 pt-5 pb-3">
+              <div className="flex items-center justify-between px-4 sm:px-5 pt-4 sm:pt-5 pb-3">
                 <div className="flex items-center gap-2 text-white/70">
                   {icon}
                   <span className="text-xs font-semibold">{label}</span>
@@ -278,7 +278,7 @@ export default function Component() {
                   All →
                 </span>
               </div>
-              <div className="h-px mx-5 bg-white/[0.07]" />
+              <div className="h-px mx-4 sm:mx-5 bg-white/[0.07]" />
               <div className="p-3">
                 <CryptoList items={items} />
               </div>
@@ -288,16 +288,16 @@ export default function Component() {
 
         {/* ── MAIN TABLE ────────────────────────────────────────────── */}
         <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
-          <div className="flex items-center justify-between px-6 pt-5 pb-4">
+          <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4">
             <div className="flex items-center gap-2 text-white/70">
               <Zap className="w-3.5 h-3.5" />
               <span className="text-xs font-semibold">All markets</span>
             </div>
             <div className="flex items-center gap-2">
-              <button className="px-3.5 py-1.5 rounded-md text-[11px] font-semibold text-white bg-white/10 border border-white/15 transition-colors">
+              <button className="px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] font-semibold text-white bg-white/10 border border-white/15 transition-colors">
                 Spot
               </button>
-              <button className="px-3.5 py-1.5 rounded-md text-[11px] font-medium text-white/40 border border-white/10 hover:text-white/70 hover:border-white/15 transition-colors">
+              <button className="px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] font-medium text-white/40 border border-white/10 hover:text-white/70 hover:border-white/15 transition-colors">
                 Favorites
               </button>
             </div>

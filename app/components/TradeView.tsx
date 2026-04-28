@@ -73,6 +73,10 @@ export function TradeView({ market }: { market: string }) {
   }, [market, chartRef]);
 
   return (
-    <div className="font-inter" ref={chartRef} style={{ height: "75vh", width: "100%", marginTop: 4 }} />
+    <div
+      ref={chartRef}
+      className="font-inter w-full h-[260px] sm:h-[360px] lg:h-[75vh]"
+      style={{ marginTop: 4 }}
+    />
   );
 }

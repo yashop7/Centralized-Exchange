@@ -58,10 +58,7 @@ export default function Page() {
           </div>
 
           {/* Order book */}
-          <div
-            className="w-full lg:w-[260px] shrink-0 border-b lg:border-b-0 border-white/10 overflow-hidden"
-            style={{ maxHeight: "calc(100vh - 56px - 56px)" }}
-          >
+          <div className="w-full lg:w-[260px] shrink-0 border-b lg:border-b-0 border-white/10 overflow-hidden h-[380px] lg:h-auto lg:max-h-[calc(100vh-112px)]">
             <Depth market={market as string} />
           </div>
         </div>

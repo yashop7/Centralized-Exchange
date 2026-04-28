@@ -70,7 +70,7 @@ export const MarketBar = ({ market }: { market: string }) => {
       </div>
 
       {/* Stats */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-4 sm:gap-6">
         <TickerStat
           label="24h Change"
           value={
@@ -80,17 +80,17 @@ export const MarketBar = ({ market }: { market: string }) => {
             </span>
           }
         />
-        <TickerStat label="24h High"   value={fmt(ticker?.high)} />
-        <TickerStat label="24h Low"    value={fmt(ticker?.low)} />
-        <TickerStat label="24h Volume" value={fmt(ticker?.volume)} />
+        <TickerStat label="24h High"   value={fmt(ticker?.high)} className="hidden sm:flex" />
+        <TickerStat label="24h Low"    value={fmt(ticker?.low)} className="hidden sm:flex" />
+        <TickerStat label="24h Volume" value={fmt(ticker?.volume)} className="hidden md:flex" />
       </div>
     </div>
   );
 };
 
-function TickerStat({ label, value }: { label: string; value: React.ReactNode }) {
+function TickerStat({ label, value, className = "" }: { label: string; value: React.ReactNode; className?: string }) {
   return (
-    <div className="flex flex-col shrink-0">
+    <div className={`flex flex-col shrink-0 ${className}`}>
       <span className="text-[9px] font-medium uppercase tracking-widest text-white/28 leading-none mb-1">
         {label}
       </span>
