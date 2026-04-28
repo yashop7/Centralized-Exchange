@@ -11,12 +11,12 @@ export const Appbar = () => {
 
   return (
     <header className="sticky top-0 z-50 h-14 border-b border-white/10 bg-black/95 backdrop-blur-sm">
-      <div className="flex h-full items-center justify-between px-6">
+      <div className="flex h-full items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <div className="flex items-center gap-7">
+        <div className="flex items-center gap-3 sm:gap-7 min-w-0">
           <button
             type="button"
-            className="flex items-center gap-2.5"
+            className="flex items-center gap-2 shrink-0"
             onClick={() => router.push("/")}
           >
             <div className="w-6 h-6 bg-black flex items-center justify-center rounded-sm border border-white/20">
@@ -33,9 +33,9 @@ export const Appbar = () => {
           </button>
 
           {/* Nav */}
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-0.5 sm:gap-1">
             {[
-              { label: "Markets",     path: "/markets",       match: "/markets" },
+              { label: "Markets",     path: "/markets",        match: "/markets" },
               { label: "TATA Market", path: "/trade/TATA_INR", match: "/trade/TATA_INR" },
             ].map(({ label, path, match }) => {
               const active = route.startsWith(match);
@@ -44,7 +44,7 @@ export const Appbar = () => {
                   key={path}
                   type="button"
                   onClick={() => router.push(path)}
-                  className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all duration-150 ${
+                  className={`px-2.5 sm:px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all duration-150 whitespace-nowrap ${
                     active
                       ? "text-white bg-white/10"
                       : "text-white/45 hover:text-white hover:bg-white/5"
@@ -58,9 +58,11 @@ export const Appbar = () => {
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <DepositModal />
-          <PrimaryButton>Withdraw</PrimaryButton>
+          <span className="hidden sm:inline-flex">
+            <PrimaryButton>Withdraw</PrimaryButton>
+          </span>
         </div>
       </div>
     </header>

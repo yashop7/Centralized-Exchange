@@ -97,9 +97,9 @@ export default function Component() {
 
   if (!data) {
     return (
-      <div className="text-white min-h-screen p-6 md:p-10 bg-black">
+      <div className="text-white min-h-screen p-4 sm:p-6 md:p-10 bg-black">
         <div className="max-w-7xl mx-auto space-y-6">
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] h-[280px] p-10 flex flex-col justify-end space-y-4">
+          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] h-[220px] sm:h-[280px] p-6 sm:p-10 flex flex-col justify-end space-y-3 sm:space-y-4">
             <Skeleton className="h-10 w-64 bg-white/[0.06]" />
             <Skeleton className="h-5 w-96 bg-white/[0.04]" />
             <div className="flex gap-3 pt-1">
@@ -131,16 +131,16 @@ export default function Component() {
               </div>
             ))}
           </div>
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5 space-y-4">
+          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-4 sm:p-5 space-y-4">
             {[1,2,3,4,5].map((i) => (
-              <div key={i} className="flex items-center gap-4 py-2 border-b border-white/[0.06]">
-                <Skeleton className="h-9 w-9 rounded-full bg-white/[0.06]" />
-                <div className="flex-1 flex items-center justify-between">
-                  <Skeleton className="h-4 w-24 bg-white/[0.04]" />
-                  <Skeleton className="h-4 w-20 bg-white/[0.04]" />
-                  <Skeleton className="h-4 w-20 bg-white/[0.04]" />
-                  <Skeleton className="h-5 w-14 rounded bg-white/[0.04]" />
-                  <Skeleton className="h-8 w-24 bg-white/[0.04]" />
+              <div key={i} className="flex items-center gap-3 sm:gap-4 py-2 border-b border-white/[0.06]">
+                <Skeleton className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/[0.06] shrink-0" />
+                <div className="flex-1 flex items-center justify-between gap-2">
+                  <Skeleton className="h-4 w-20 sm:w-24 bg-white/[0.04]" />
+                  <Skeleton className="h-4 w-16 sm:w-20 bg-white/[0.04]" />
+                  <Skeleton className="h-4 w-16 sm:w-20 bg-white/[0.04] hidden sm:block" />
+                  <Skeleton className="h-5 w-12 sm:w-14 rounded bg-white/[0.04]" />
+                  <Skeleton className="h-8 w-20 sm:w-24 bg-white/[0.04] hidden md:block" />
                 </div>
               </div>
             ))}
@@ -176,7 +176,7 @@ export default function Component() {
   ];
 
   return (
-    <div className="text-white min-h-screen p-6 md:p-10 bg-black">
+    <div className="text-white min-h-screen p-4 sm:p-6 md:p-10 bg-black">
       <div className="max-w-7xl mx-auto space-y-4">
 
         {/* HERO */}
@@ -192,28 +192,28 @@ export default function Component() {
           {/* Fade mask over dots */}
           <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a0a0a 30%, rgba(10,10,10,0.6) 70%, rgba(10,10,10,0.2) 100%)" }} />
 
-          <div className="relative px-10 py-14 md:py-16 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 text-[10px] font-medium text-white/50 uppercase tracking-widest mb-6">
+          <div className="relative px-6 sm:px-10 py-10 sm:py-14 md:py-16 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 text-[10px] font-medium text-white/50 uppercase tracking-widest mb-5 sm:mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] shrink-0" />
               Live markets
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-4 tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-3 sm:mb-4 tracking-tight">
               Trade crypto,<br />without limits.
             </h1>
-            <p className="text-base text-white/50 mb-8 leading-relaxed max-w-md">
+            <p className="text-sm sm:text-base text-white/50 mb-6 sm:mb-8 leading-relaxed max-w-md">
               Real-time order books, limit &amp; market orders, deep liquidity.
               Built for traders who demand precision.
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
               <a
                 href="/trade/TATA_INR"
-                className="inline-flex items-center gap-1.5 bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-md hover:bg-white/90 transition-colors"
+                className="inline-flex items-center gap-1.5 bg-white text-black text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-white/90 transition-colors"
               >
-                Start trading <ArrowRight className="w-4 h-4" />
+                Start trading <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </a>
               <a
                 href="#markets"
-                className="inline-flex items-center gap-1.5 border border-white/15 text-white text-sm font-medium px-5 py-2.5 rounded-md hover:bg-white/5 hover:border-white/25 transition-colors"
+                className="inline-flex items-center gap-1.5 border border-white/15 text-white text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-white/5 hover:border-white/25 transition-colors"
               >
                 View markets
               </a>
@@ -239,28 +239,28 @@ export default function Component() {
 
         {/* ── FEATURED CARD ─────────────────────────────────────────── */}
         <div
-          className="rounded-xl border border-white/10 bg-[#0a0a0a] px-6 py-5 flex items-center justify-between cursor-pointer hover:bg-white/[0.03] transition-colors group"
+          className="rounded-xl border border-white/10 bg-[#0a0a0a] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between cursor-pointer hover:bg-white/[0.03] transition-colors group"
           onClick={() => (window.location.href = "/trade/TATA_INR")}
         >
-          <div className="flex items-center gap-4">
-            <div className="p-3 rounded-lg border border-white/10 bg-white/[0.04]">
-              <TrendingUp className="w-5 h-5 text-white/60" />
+          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+            <div className="p-2.5 sm:p-3 rounded-lg border border-white/10 bg-white/[0.04] shrink-0">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white/60" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <span className="text-sm font-semibold text-white">TATA / INR</span>
                 <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase text-[#22c55e] bg-[#22c55e]/10 ring-1 ring-[#22c55e]/20">Live</span>
               </div>
-              <p className="text-xs text-white/40">₹500 · Vol ₹1.2M · Active market</p>
+              <p className="text-xs text-white/40 truncate">₹500 · Vol ₹1.2M · Active market</p>
             </div>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6 shrink-0">
             <div className="text-right hidden sm:block">
               <p className="text-[9px] font-medium uppercase tracking-widest text-white/30 mb-1">24h Change</p>
               <p className="font-mono text-base font-semibold text-[#22c55e] tabular-nums">+12.5%</p>
             </div>
-            <div className="flex items-center gap-1.5 bg-white text-black px-4 py-2 rounded-md text-sm font-semibold group-hover:bg-white/90 transition-colors">
-              Trade <ArrowUpRight className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 bg-white text-black px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold group-hover:bg-white/90 transition-colors whitespace-nowrap">
+              Trade <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             </div>
           </div>
         </div>
@@ -388,12 +388,19 @@ function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
 
   return (
     <div className="overflow-x-auto no-scrollbar">
-      <table className="w-full min-w-[640px]">
+      <table className="w-full min-w-0">
         <thead>
           <tr className="border-b border-white/[0.07]">
-            {["Name", "Price", "Market Cap", "24h Volume", "24h Change", "7 Days"].map((h, i) => (
-              <th key={h} className={`px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28 ${i <= 1 ? "text-left" : "text-right"}`}>
-                {h}
+            {[
+              { label: "Name",        hide: "" },
+              { label: "Price",       hide: "" },
+              { label: "Market Cap",  hide: "hidden sm:table-cell" },
+              { label: "24h Volume",  hide: "hidden sm:table-cell" },
+              { label: "24h Change",  hide: "" },
+              { label: "7 Days",      hide: "hidden md:table-cell" },
+            ].map(({ label, hide }, i) => (
+              <th key={label} className={`px-3 sm:px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28 ${i <= 1 ? "text-left" : "text-right"} ${hide}`}>
+                {label}
               </th>
             ))}
           </tr>
@@ -427,45 +434,47 @@ function CryptoTableRow({ name, image, symbol, price, marketCap, volume, change,
       onClick={() => (window.location.href = `/trade/${symbol.toUpperCase()}_USDC`)}
     >
       {/* Name */}
-      <td className="px-5 py-3.5">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full overflow-hidden ring-1 ring-white/10 bg-white/[0.04] shrink-0">
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden ring-1 ring-white/10 bg-white/[0.04] shrink-0">
             <Image src={image} alt={symbol} width={32} height={32} className="w-full h-full object-cover" />
           </div>
           <div>
-            <p className="text-sm font-semibold text-white">{name}</p>
+            <p className="text-xs sm:text-sm font-semibold text-white">{name}</p>
             <p className="text-[10px] font-medium uppercase text-white/30">{symbol}</p>
           </div>
         </div>
       </td>
       {/* Price */}
-      <td className="px-5 py-3.5">
-        <span className="font-mono text-sm text-white tabular-nums">
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5">
+        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
           ${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </span>
       </td>
-      {/* Market cap */}
-      <td className="px-5 py-3.5 text-right">
+      {/* Market cap - hidden on mobile */}
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right hidden sm:table-cell">
         <span className="font-mono text-sm text-white/55 tabular-nums">${formatNumber(marketCap)}</span>
       </td>
-      {/* Volume */}
-      <td className="px-5 py-3.5 text-right">
+      {/* Volume - hidden on mobile */}
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right hidden sm:table-cell">
         <span className="font-mono text-sm text-white/55 tabular-nums">${formatNumber(volume)}</span>
       </td>
       {/* Change */}
-      <td className="px-5 py-3.5 text-right">
-        <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-mono font-semibold ${
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right">
+        <span className={`inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-mono font-semibold ${
           up
             ? "text-[#22c55e] bg-[#22c55e]/10 ring-1 ring-[#22c55e]/20"
             : "text-[#ef4444] bg-[#ef4444]/10 ring-1 ring-[#ef4444]/20"
         }`}>
-          {up ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
+          {up ? <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> : <TrendingDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
           {up ? "+" : ""}{change?.toFixed(2)}%
         </span>
       </td>
-      {/* Sparkline */}
-      <td className="px-5 py-3.5 flex justify-end items-center">
-        <CryptoLineChart data={klineData ?? []} color={up ? "#22c55e" : "#ef4444"} />
+      {/* Sparkline - hidden on mobile */}
+      <td className="px-3 sm:px-5 py-3 sm:py-3.5 justify-end items-center hidden md:table-cell">
+        <div className="flex justify-end">
+          <CryptoLineChart data={klineData ?? []} color={up ? "#22c55e" : "#ef4444"} />
+        </div>
       </td>
     </motion.tr>
   );
