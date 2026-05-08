@@ -2,6 +2,12 @@
   "redirects": [
     {
       "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "exchange-frontend-vercel.vercel.app"
+        }
+      ],
       "destination": "https://exchange.yashtwt.me/$1",
       "permanent": true
     }
