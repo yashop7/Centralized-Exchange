@@ -1,9 +1,0 @@
-{
-  "redirects": [
-    {
-      "source": "/(.*)",
-      "destination": "https://exchange.yashtwt.me/$1",
-      "permanent": true
-    }
-  ]
-}
