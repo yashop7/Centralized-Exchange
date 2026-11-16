@@ -1,24 +1,48 @@
-import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
+import { GeistMono } from "geist/font/mono";
 import "./globals.css";
-import { Appbar } from "./components/Appbar";
-import { Toaster } from "@/components/ui/toaster";
+import { AppShell } from "./components/shell/AppShell";
+import { Providers } from "./providers";
 
 const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
-  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-  weight: ["400", "500"],
+// Open Runde: the rounded display face for headings and big numbers.
+const openRunde = localFont({
+  variable: "--font-open-runde",
+  display: "swap",
+  src: [
+    {
+      path: "../node_modules/@fontsource/open-runde/files/open-runde-latin-500-normal.woff2",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/open-runde/files/open-runde-latin-600-normal.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../node_modules/@fontsource/open-runde/files/open-runde-latin-700-normal.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
 });
 
 export const metadata: Metadata = {
   title: "Exchange",
   description: "Trade crypto assets",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#000000",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({
@@ -27,11 +51,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
-        <Appbar />
-        {children}
-        <Toaster />
+    <html
+      className={`dark ${inter.variable} ${openRunde.variable} ${GeistMono.variable}`}
+      lang="en"
+      suppressHydrationWarning
+    >
+      <body>
+        <Providers>
+          <AppShell>{children}</AppShell>
+        </Providers>
       </body>
     </html>
   );

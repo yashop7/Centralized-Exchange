@@ -4,7 +4,7 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.ts",
+    "config": "",
     "css": "app/globals.css",
     "baseColor": "neutral",
     "cssVariables": true,
@@ -17,5 +17,9 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "lucide",
+  "registries": {
+    "@coss": "https://coss.com/ui/r/{name}.json",
+    "@beui": "https://beui.dev/r/{name}.json"
+  }
 }

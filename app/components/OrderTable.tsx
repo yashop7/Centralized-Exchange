@@ -1,8 +1,29 @@
-import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
-import { Order } from "../trade/[market]/page";
-import Image from "next/image";
+"use client";
 
-export function OrderTable({ openOrders }: { openOrders: Order[] }) {
+import { ArrowDownIcon, ArrowUpIcon, InboxIcon } from "lucide-react";
+import { Pill } from "@/components/ui/pill";
+import { Surface } from "@/components/ui/panel";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
+import { TokenIcon } from "@/components/ui/token-icon";
+import { Order } from "../trade/[market]/page";
+
+export function OrderTable({
+  openOrders,
+  balance = "",
+  inr = "",
+}: {
+  openOrders: Order[];
+  balance?: string;
+  inr?: string;
+}) {
   const aggregated = openOrders.reduce((acc: Order[], order) => {
     const existing = acc.find((o) => o.price === order.price && o.side === order.side);
     if (existing) {
@@ -14,64 +35,121 @@ export function OrderTable({ openOrders }: { openOrders: Order[] }) {
     return acc;
   }, []);
 
-  return (
-    <div className="border-t border-white/10 bg-black">
-      <div className="px-4 pt-3 pb-2.5 border-b border-white/10">
-        <span className="text-xs font-medium text-white/70">Open orders</span>
-      </div>
+  const balances = [
+    { src: "/usdc copy.webp", symbol: "USDC", name: "USD Coin", value: parseFloat(balance || "0").toFixed(2) },
+    { src: "/TATA.png", symbol: "TATA", name: "Tata", value: parseFloat(inr || "0").toFixed(7) },
+  ];
 
-      <div className="overflow-x-auto no-scrollbar">
-        <table className="min-w-full border-collapse">
-          <thead>
-            <tr className="border-b border-white/[0.06]">
-              {["Coin", "Price", "Quantity", "Filled", "Side"].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-left text-[9px] font-medium uppercase tracking-widest text-white/28">
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {aggregated.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-xs text-white/25">
-                  No open orders
-                </td>
-              </tr>
-            ) : (
-              aggregated.map((order) => (
-                <tr
-                  key={order.orderId}
-                  className="border-b border-white/[0.05] cursor-pointer hover:bg-white/[0.02] transition-colors"
-                >
-                  <td className="px-4 py-3 flex items-center gap-2">
-                    <div className="w-5 h-5 rounded-full overflow-hidden ring-1 ring-white/10">
-                      <Image src="/TATA.png" alt="coin" width={20} height={20} className="w-full h-full object-cover" />
-                    </div>
-                    <span className="text-xs text-white/50">TATA</span>
-                  </td>
-                  <td className="px-4 py-3 font-mono text-xs text-white tabular-nums">{order.price}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-white/60 tabular-nums">{order.quantity}</td>
-                  <td className="px-4 py-3 font-mono text-xs text-white/60 tabular-nums">{order.filled}</td>
-                  <td className="px-4 py-3">
-                    <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-semibold ${
-                        order.side === "buy"
-                          ? "bg-[#22c55e]/10 text-[#22c55e] ring-1 ring-[#22c55e]/20"
-                          : "bg-[#ef4444]/10 text-[#ef4444] ring-1 ring-[#ef4444]/20"
-                      }`}
-                    >
-                      {order.side === "buy"
-                        ? <ArrowUpIcon className="w-2.5 h-2.5" />
-                        : <ArrowDownIcon className="w-2.5 h-2.5" />}
-                      {order.side.toUpperCase()}
+  return (
+    <Surface className="overflow-hidden">
+      <Tabs className="gap-0" defaultValue="orders">
+        <div className="flex items-center justify-between px-5 pt-4 pb-3">
+          <TabsList>
+            <TabsTab className="h-8 px-4" value="orders">
+              Open orders
+              {aggregated.length > 0 ? (
+                <span className="num ms-1 text-foreground/40 text-xs">{aggregated.length}</span>
+              ) : null}
+            </TabsTab>
+            <TabsTab className="h-8 px-4" value="balances">
+              Balances
+            </TabsTab>
+          </TabsList>
+        </div>
+
+        <TabsPanel value="orders">
+          {aggregated.length === 0 ? (
+            <EmptyState
+              description="Orders you place will rest here until they fill."
+              title="No open orders"
+            />
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  {["Market", "Price", "Quantity", "Filled", "Side"].map((h, i) => (
+                    <TableHead className={i > 0 ? "text-right" : ""} key={h}>
+                      {h}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {aggregated.map((order) => {
+                  const pct = order.quantity > 0 ? Math.min(100, (order.filled / order.quantity) * 100) : 0;
+                  return (
+                    <TableRow key={order.orderId}>
+                      <TableCell>
+                        <span className="flex items-center gap-3">
+                          <TokenIcon size={24} src="/TATA.png" symbol="TATA" />
+                          <span className="font-medium text-heading">TATA</span>
+                        </span>
+                      </TableCell>
+                      <TableCell className="num text-right text-heading">{order.price}</TableCell>
+                      <TableCell className="num text-right text-foreground/70">{order.quantity}</TableCell>
+                      <TableCell className="text-right">
+                        <span className="inline-flex items-center justify-end gap-3">
+                          <span aria-hidden="true" className="h-1 w-14 overflow-hidden rounded-full bg-foreground/10">
+                            <span
+                              className="block h-full rounded-full bg-foreground/50 transition-[width] duration-300 ease-out"
+                              style={{ width: `${pct}%` }}
+                            />
+                          </span>
+                          <span className="num text-foreground/70">{order.filled}</span>
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <Pill tone={order.side === "buy" ? "buy" : "sell"}>
+                          {order.side === "buy" ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                          {order.side === "buy" ? "Buy" : "Sell"}
+                        </Pill>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          )}
+        </TabsPanel>
+
+        <TabsPanel value="balances">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Asset</TableHead>
+                <TableHead className="text-right">Available</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {balances.map(({ src, symbol, name, value }) => (
+                <TableRow key={symbol}>
+                  <TableCell>
+                    <span className="flex items-center gap-3">
+                      <TokenIcon size={24} src={src} symbol={symbol} />
+                      <span className="font-medium text-heading">{symbol}</span>
+                      <span className="text-foreground/40">{name}</span>
                     </span>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+                  </TableCell>
+                  <TableCell className="num text-right text-heading">{value}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TabsPanel>
+      </Tabs>
+    </Surface>
+  );
+}
+
+function EmptyState({ title, description }: { title: string; description: string }) {
+  return (
+    <div className="flex flex-col items-center gap-3 px-6 pt-10 pb-14 text-center">
+      <span className="border-apple flex size-10 items-center justify-center rounded-xl bg-surface-hover text-foreground/50">
+        <InboxIcon className="size-[18px]" strokeWidth={1.5} />
+      </span>
+      <div className="flex flex-col gap-1">
+        <p className="font-medium text-foreground/80 text-sm">{title}</p>
+        <p className="text-foreground/40 text-sm">{description}</p>
       </div>
     </div>
   );

@@ -44,33 +44,20 @@ export default function Page() {
   }, []);
 
   return (
-    <div className="relative flex flex-col lg:flex-row w-full min-h-[calc(100vh-56px)] bg-black overflow-hidden">
-      {/* Main column */}
-      <div className="flex flex-col flex-1 min-w-0">
-        {/* Ticker */}
-        <MarketBar market={market as string} />
+    <div className="hero-glow @container flex flex-1 flex-col gap-8 rounded-[inherit] p-5 md:p-8 xl:p-10">
+      <MarketBar market={market as string} />
 
-        {/* Chart + Depth row */}
-        <div className="flex flex-col lg:flex-row flex-1 min-h-0">
-          {/* Chart */}
-          <div className="flex-1 min-w-0 border-b lg:border-b-0 lg:border-r border-white/10">
-            <TradeView market={market as string} />
-          </div>
-
-          {/* Order book */}
-          <div className="w-full lg:w-[260px] shrink-0 border-b lg:border-b-0 border-white/10 overflow-hidden h-[380px] lg:h-auto lg:max-h-[calc(100vh-112px)]">
-            <Depth market={market as string} />
-          </div>
-        </div>
-
-        {/* Open orders */}
-        <OrderTable openOrders={openOrders} />
+      {/* Chart · order book · order form. Columns follow the card's own width. */}
+      <div className="grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-[minmax(0,1fr)_300px_320px]">
+        <TradeView
+          className="h-[420px] @3xl:col-span-2 @6xl:col-span-1 @6xl:h-auto"
+          market={market as string}
+        />
+        <Depth market={market as string} />
+        <SwapUI balance={balance} inr={inr} market={market as string} />
       </div>
 
-      {/* Swap panel */}
-      <div className="w-full lg:w-[300px] shrink-0 border-t lg:border-t-0 lg:border-l border-white/10 overflow-y-auto no-scrollbar">
-        <SwapUI market={market as string} balance={balance} inr={inr} />
-      </div>
+      <OrderTable balance={balance} inr={inr} openOrders={openOrders} />
     </div>
   );
 }

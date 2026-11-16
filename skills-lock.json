@@ -1,15 +1,45 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
+    "beui": {
+      "source": "starc007/ui-components",
+      "sourceType": "github",
+      "skillPath": "skills/beui/SKILL.md",
+      "computedHash": "6ae66edf98cfe88315a5ea7bc5cb644958fac4565edc98d654b0e443a38bd600"
+    },
+    "coss": {
+      "source": "cosscom/ui",
+      "sourceType": "github",
+      "skillPath": "apps/ui/skills/coss/SKILL.md",
+      "computedHash": "b8ce9e8aa0db086eaf21aee001726cb129f9927267b1bf6e1e688dfbb4fb9b6f"
+    },
+    "coss-particles": {
+      "source": "cosscom/ui",
+      "sourceType": "github",
+      "skillPath": "apps/ui/skills/coss-particles/SKILL.md",
+      "computedHash": "d8dc7fa3991fc7d62d7f47dc1535091388f33ee282915ba46d7bef517c80ecef"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "github",
-      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
+      "computedHash": ""
+    },
+    "hallmark": {
+      "source": "Nutlope/hallmark",
+      "sourceType": "github",
+      "skillPath": "skills/hallmark/SKILL.md",
+      "computedHash": "e5d4ee5cf0af2dcc81a23ef49b587fbfd71236ff9f9df9da12d3bf347e26e572"
     },
     "humanizer": {
       "source": "blader/humanizer",
       "sourceType": "github",
-      "computedHash": "67bd72223e92b4f520a1abbc9ff9db50641ed84128ba9521028d9b151dbd2429"
+      "computedHash": "a17fa394a37900abbe0a57e9e8026429924be2060ba737792e7a7172f2694c71"
+    },
+    "stageshow": {
+      "source": "benjitaylor/skills",
+      "sourceType": "github",
+      "skillPath": "stageshow/SKILL.md",
+      "computedHash": "faaf72b41c206b98da5788093eb07fcdceb80dee90b5dc6dd921048196279474"
     }
   }
 }

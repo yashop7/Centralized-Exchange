@@ -1,27 +1,48 @@
 "use client";
 
 import {
-  ColorType,
-  createChart,
-  IChartApi,
-  UTCTimestamp,
-} from "lightweight-charts";
-
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Flame,
-  Sparkles,
-  Star,
-  TrendingDown,
-  TrendingUp,
-  Zap,
+  ArrowDownRightIcon,
+  ArrowRightIcon,
+  ArrowUpRightIcon,
+  FlameIcon,
+  SearchIcon,
+  SearchXIcon,
+  SparklesIcon,
+  StarIcon,
 } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { CombineData, CombinedCryptoData } from "../utils/combine-data";
+import { motion } from "motion/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { Sparkline } from "@/components/charts/sparkline";
+import { Button } from "@/components/ui/button";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import {
+  SectionLabel,
+  Surface,
+  SurfaceHeader,
+  SurfaceTitle,
+} from "@/components/ui/panel";
+import { Pill } from "@/components/ui/pill";
+import { Segmented } from "@/components/ui/segmented";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { TokenIcon } from "@/components/ui/token-icon";
+import { EASE_OUT_QUINT } from "@/lib/motion";
+import { cn } from "@/lib/utils";
+import { HeroDemo } from "../components/hero/HeroDemo";
+import { CombineData, CombinedCryptoData } from "../utils/combine-data";
 
 export interface CurrencyData {
   price: number;
@@ -78,6 +99,8 @@ export interface LineCryptoData {
   symbol: string;
 }
 
+const FAVORITES_KEY = "exchange:favorites";
+
 export default function Component() {
   const [data, setData] = useState<CombinedCryptoData[] | null>(null);
 
@@ -95,63 +118,8 @@ export default function Component() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!data) {
-    return (
-      <div className="text-white min-h-screen p-4 sm:p-6 md:p-10 bg-black">
-        <div className="max-w-7xl mx-auto space-y-6">
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] h-[220px] sm:h-[280px] p-6 sm:p-10 flex flex-col justify-end space-y-3 sm:space-y-4">
-            <Skeleton className="h-10 w-64 bg-white/[0.06]" />
-            <Skeleton className="h-5 w-96 bg-white/[0.04]" />
-            <div className="flex gap-3 pt-1">
-              <Skeleton className="h-9 w-28 rounded-md bg-white/[0.06]" />
-              <Skeleton className="h-9 w-28 rounded-md bg-white/[0.04]" />
-            </div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[1,2,3,4].map((i) => (
-              <div key={i} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5 space-y-2">
-                <Skeleton className="h-3 w-20 bg-white/[0.06]" />
-                <Skeleton className="h-6 w-24 bg-white/[0.04]" />
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1,2,3].map((i) => (
-              <div key={i} className="rounded-xl border border-white/10 bg-[#0a0a0a] p-5 space-y-4">
-                <Skeleton className="h-4 w-24 bg-white/[0.06]" />
-                {[1,2,3,4,5].map((j) => (
-                  <div key={j} className="flex items-center justify-between">
-                    <div className="flex items-center gap-2.5">
-                      <Skeleton className="h-7 w-7 rounded-full bg-white/[0.06]" />
-                      <Skeleton className="h-4 w-16 bg-white/[0.04]" />
-                    </div>
-                    <Skeleton className="h-4 w-14 bg-white/[0.04]" />
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-          <div className="rounded-xl border border-white/10 bg-[#0a0a0a] p-4 sm:p-5 space-y-4">
-            {[1,2,3,4,5].map((i) => (
-              <div key={i} className="flex items-center gap-3 sm:gap-4 py-2 border-b border-white/[0.06]">
-                <Skeleton className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-white/[0.06] shrink-0" />
-                <div className="flex-1 flex items-center justify-between gap-2">
-                  <Skeleton className="h-4 w-20 sm:w-24 bg-white/[0.04]" />
-                  <Skeleton className="h-4 w-16 sm:w-20 bg-white/[0.04]" />
-                  <Skeleton className="h-4 w-16 sm:w-20 bg-white/[0.04] hidden sm:block" />
-                  <Skeleton className="h-5 w-12 sm:w-14 rounded bg-white/[0.04]" />
-                  <Skeleton className="h-8 w-20 sm:w-24 bg-white/[0.04] hidden md:block" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   const getNewListings = (data: CryptoData[]): CryptoData[] =>
-    data.sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()).slice(0, 5);
+    [...data].sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime()).slice(0, 5);
 
   const getTopGainers = (data: CryptoData[]): CryptoData[] =>
     data.filter((coin) => !Number.isNaN(coin.price_change_percentage_24h))
@@ -165,158 +133,141 @@ export default function Component() {
       .sort((a, b) => popularSymbols.indexOf(a.symbol.toUpperCase()) - popularSymbols.indexOf(b.symbol.toUpperCase()));
   };
 
-  const mostPopular = getPopularCoins(data);
-  const topGainer = getTopGainers(data);
-  const newEntries = getNewListings(data);
-
-  const panels = [
-    { label: "New listings", icon: <Sparkles className="w-3.5 h-3.5" />, items: newEntries },
-    { label: "Top gainers",  icon: <Flame className="w-3.5 h-3.5" />,    items: topGainer },
-    { label: "Popular",      icon: <Star className="w-3.5 h-3.5" />,     items: mostPopular },
-  ];
+  const panels = data
+    ? [
+        { label: "New listings", icon: <SparklesIcon />, items: getNewListings(data) },
+        { label: "Top gainers", icon: <FlameIcon />, items: getTopGainers(data) },
+        { label: "Popular", icon: <StarIcon />, items: getPopularCoins(data) },
+      ]
+    : null;
 
   return (
-    <div className="text-white min-h-screen p-4 sm:p-6 md:p-10 bg-black">
-      <div className="max-w-7xl mx-auto space-y-4">
-
-        {/* HERO */}
-        <div className="relative rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
-          {/* Dot grid pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.15]"
-            style={{
-              backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.35) 1px, transparent 1px)",
-              backgroundSize: "28px 28px",
-            }}
-          />
-          {/* Fade mask over dots */}
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, #0a0a0a 30%, rgba(10,10,10,0.6) 70%, rgba(10,10,10,0.2) 100%)" }} />
-
-          <div className="relative px-6 sm:px-10 py-10 sm:py-14 md:py-16 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 text-[10px] font-medium text-white/50 uppercase tracking-widest mb-5 sm:mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#22c55e] shrink-0" />
-              Live markets
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white leading-[1.1] mb-3 sm:mb-4 tracking-tight">
-              Trade crypto,<br />without limits.
-            </h1>
-            <p className="text-sm sm:text-base text-white/50 mb-6 sm:mb-8 leading-relaxed max-w-md">
-              Real-time order books, limit &amp; market orders, deep liquidity.
-              Built for traders who demand precision.
-            </p>
-            <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-              <a
-                href="/trade/TATA_INR"
-                className="inline-flex items-center gap-1.5 bg-white text-black text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-white/90 transition-colors"
-              >
-                Start trading <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              </a>
-              <a
-                href="#markets"
-                className="inline-flex items-center gap-1.5 border border-white/15 text-white text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 sm:py-2.5 rounded-md hover:bg-white/5 hover:border-white/25 transition-colors"
-              >
-                View markets
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* ── STATS STRIP ──────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3">
-          {[
-            { label: "24h Volume",     value: "$84.2B",  delta: "+6.4%",  up: true  },
-            { label: "Market Cap",     value: "$2.41T",  delta: "+2.1%",  up: true  },
-            { label: "Active Markets", value: "1,248",   delta: "Live",   up: true  },
-            { label: "BTC Dominance",  value: "52.3%",   delta: "-0.4%",  up: false },
-          ].map(({ label, value, delta, up }) => (
-            <div key={label} className="rounded-xl border border-white/10 bg-[#0a0a0a] px-3 sm:px-5 py-3 sm:py-4">
-              <p className="text-[9px] font-medium uppercase tracking-widest text-white/30 mb-1">{label}</p>
-              <p className="font-mono text-base sm:text-lg font-semibold text-white tabular-nums">{value}</p>
-              <p className={`font-mono text-[10px] mt-0.5 ${up ? "text-[#22c55e]" : "text-[#ef4444]"}`}>{delta}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* ── FEATURED CARD ─────────────────────────────────────────── */}
-        <div
-          className="rounded-xl border border-white/10 bg-[#0a0a0a] px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between cursor-pointer hover:bg-white/[0.03] transition-colors group"
-          onClick={() => (window.location.href = "/trade/TATA_INR")}
+    <div className="hero-glow @container flex flex-1 flex-col gap-12 overflow-hidden rounded-[inherit] p-5 md:p-8 xl:p-10">
+      {/* ── HERO ─────────────────────────────────────────────── */}
+      <section className="grid items-center gap-x-12 gap-y-10 pt-16 sm:pt-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] @5xl:pt-14">
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col items-start gap-6"
+          initial={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.5, ease: EASE_OUT_QUINT }}
         >
-          <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            <div className="p-2.5 sm:p-3 rounded-lg border border-white/10 bg-white/[0.04] shrink-0">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-white/60" />
-            </div>
-            <div className="min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-sm font-semibold text-white">TATA / INR</span>
-                <span className="px-2 py-0.5 rounded-full text-[9px] font-bold tracking-widest uppercase text-[#22c55e] bg-[#22c55e]/10 ring-1 ring-[#22c55e]/20">Live</span>
-              </div>
-              <p className="text-xs text-white/40 truncate">₹500 · Vol ₹1.2M · Active market</p>
-            </div>
+          <Pill dot live tone="buy">
+            Live markets
+          </Pill>
+          <h1 className="text-balance font-bold font-runde text-4xl text-heading tracking-tight sm:text-5xl md:text-6xl">
+            Trade crypto, without limits.
+          </h1>
+          <p className="max-w-[46ch] text-muted-foreground">
+            Real-time order books, limit and market orders, deep liquidity.
+            Built for traders who demand precision.
+          </p>
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <Button render={<Link href="/trade/TATA_INR" />} size="lg">
+              Start trading
+              <ArrowRightIcon />
+            </Button>
+            <Button render={<a href="#markets" />} size="lg" variant="secondary">
+              View markets
+            </Button>
           </div>
-          <div className="flex items-center gap-3 sm:gap-6 shrink-0">
-            <div className="text-right hidden sm:block">
-              <p className="text-[9px] font-medium uppercase tracking-widest text-white/30 mb-1">24h Change</p>
-              <p className="font-mono text-base font-semibold text-[#22c55e] tabular-nums">+12.5%</p>
-            </div>
-            <div className="flex items-center gap-1.5 bg-white text-black px-3 sm:px-4 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-semibold group-hover:bg-white/90 transition-colors whitespace-nowrap">
-              Trade <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            </div>
-          </div>
-        </div>
+        </motion.div>
 
-        {/* ── THREE-PANEL GRID ──────────────────────────────────────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4" id="markets">
-          {panels.map(({ label, icon, items }) => (
-            <div key={label} className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
-              <div className="flex items-center justify-between px-4 sm:px-5 pt-4 sm:pt-5 pb-3">
-                <div className="flex items-center gap-2 text-white/70">
-                  {icon}
-                  <span className="text-xs font-semibold">{label}</span>
-                </div>
-                <span className="text-[9px] font-medium uppercase tracking-widest text-white/25 cursor-pointer hover:text-white/50 transition-colors">
-                  All →
+        <HeroDemo />
+      </section>
+
+      {/* ── STATS ────────────────────────────────────────────── */}
+      <section className="grid grid-cols-2 gap-4 @4xl:grid-cols-4">
+        {[
+          { label: "24h volume", value: "$84.2B", delta: "+6.4%", up: true },
+          { label: "Market cap", value: "$2.41T", delta: "+2.1%", up: true },
+          { label: "Active markets", value: "1,248", delta: "Live", up: true },
+          { label: "BTC dominance", value: "52.3%", delta: "-0.4%", up: false },
+        ].map(({ label, value, delta, up }) => (
+          <Surface className="flex flex-col gap-3 p-5" key={label}>
+            <SectionLabel>{label}</SectionLabel>
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="font-runde font-semibold text-2xl text-heading tabular-nums tracking-tight sm:text-3xl">
+                {value}
+              </span>
+              <span className={cn("num text-xs", up ? "text-buy" : "text-sell")}>{delta}</span>
+            </div>
+          </Surface>
+        ))}
+      </section>
+
+      {/* ── FEATURED MARKET ──────────────────────────────────── */}
+      <Link
+        className="group rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        href="/trade/TATA_INR"
+      >
+        <Surface className="flex items-center justify-between gap-4 p-5 transition-colors duration-150 ease-out group-hover:bg-surface-hover group-active:scale-[0.995]">
+          <div className="flex min-w-0 items-center gap-4">
+            <TokenIcon size={44} src="/TATA.png" symbol="TATA" />
+            <div className="flex min-w-0 flex-col gap-1.5">
+              <div className="flex items-center gap-2.5">
+                <span className="font-runde font-semibold text-heading text-lg leading-none tracking-tight">
+                  TATA / INR
                 </span>
+                <Pill dot live size="sm" tone="buy">
+                  Live
+                </Pill>
               </div>
-              <div className="h-px mx-4 sm:mx-5 bg-white/[0.07]" />
-              <div className="p-3">
-                <CryptoList items={items} />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── MAIN TABLE ────────────────────────────────────────────── */}
-        <div className="rounded-xl border border-white/10 bg-[#0a0a0a] overflow-hidden">
-          <div className="flex items-center justify-between px-4 sm:px-6 pt-4 sm:pt-5 pb-3 sm:pb-4">
-            <div className="flex items-center gap-2 text-white/70">
-              <Zap className="w-3.5 h-3.5" />
-              <span className="text-xs font-semibold">All markets</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] font-semibold text-white bg-white/10 border border-white/15 transition-colors">
-                Spot
-              </button>
-              <button className="px-2.5 sm:px-3.5 py-1.5 rounded-md text-[11px] font-medium text-white/40 border border-white/10 hover:text-white/70 hover:border-white/15 transition-colors">
-                Favorites
-              </button>
+              <p className="truncate text-foreground/50 text-sm leading-none">
+                The in-house order book. Place real limit orders against the matching engine.
+              </p>
             </div>
           </div>
-          <CryptoTable data={data} />
-        </div>
+          <div className="flex shrink-0 items-center gap-8">
+            <div className="hidden flex-col items-end gap-1.5 sm:flex">
+              <SectionLabel>24h change</SectionLabel>
+              <span className="num text-[15px] text-buy leading-none">+12.5%</span>
+            </div>
+            <span className="border-apple flex size-10 items-center justify-center rounded-full bg-surface-hover text-foreground/80 transition-[color,translate] duration-200 ease-out group-hover:translate-x-0.5 group-hover:text-heading">
+              <ArrowRightIcon className="size-[18px]" strokeWidth={1.5} />
+            </span>
+          </div>
+        </Surface>
+      </Link>
 
-      </div>
+      {/* ── THREE LISTS ──────────────────────────────────────── */}
+      <section className="grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-3">
+        {(panels ?? PANEL_PLACEHOLDERS).map(({ label, icon, items }) => (
+          <Surface className="flex flex-col" key={label}>
+            <SurfaceHeader>
+              <SurfaceTitle className="flex items-center gap-2.5 [&_svg]:size-4 [&_svg]:stroke-[1.5] [&_svg]:text-foreground/50">
+                {icon}
+                {label}
+              </SurfaceTitle>
+            </SurfaceHeader>
+            <div className="px-2 pb-2">
+              {items ? <CryptoList items={items} /> : <CryptoListSkeleton />}
+            </div>
+          </Surface>
+        ))}
+      </section>
+
+      {/* ── ALL MARKETS ──────────────────────────────────────── */}
+      <CryptoTable data={data} />
     </div>
   );
 }
 
-// ── UTILS ──────────────────────────────────────────────────────────────────────
+const PANEL_PLACEHOLDERS: { label: string; icon: React.ReactNode; items: CryptoData[] | null }[] = [
+  { label: "New listings", icon: <SparklesIcon />, items: null },
+  { label: "Top gainers", icon: <FlameIcon />, items: null },
+  { label: "Popular", icon: <StarIcon />, items: null },
+];
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+// ── UTILS ──────────────────────────────────────────────────────────────────────
 
 const formatPercentage = (value: number) =>
   new Intl.NumberFormat("en-US", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
+
+// Sub-cent tokens would all read "$0.00" at two decimals.
+function formatPrice(value: number) {
+  const digits = value >= 1 ? 2 : value >= 0.01 ? 4 : 8;
+  return value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: digits });
+}
 
 function formatNumber(value: number) {
   if (value >= 1e12) return (value / 1e12).toFixed(2) + "T";
@@ -326,42 +277,69 @@ function formatNumber(value: number) {
   return value;
 }
 
-// CRYPTO LIST
+function Change({ value, className }: { value: number; className?: string }) {
+  const up = value >= 0;
+  const Arrow = up ? ArrowUpRightIcon : ArrowDownRightIcon;
+  return (
+    <span className={cn("num inline-flex items-center justify-end gap-1", up ? "text-buy" : "text-sell", className)}>
+      <Arrow className="size-3.5" strokeWidth={1.75} />
+      {formatPercentage(Math.abs(value))}
+    </span>
+  );
+}
+
+// ── CRYPTO LIST ────────────────────────────────────────────────────────────────
 
 function CryptoList({ items }: { items: CryptoData[] }) {
   return (
-    <ul className="space-y-0.5">
-      {items.map((crypto, index) => {
-        const up = crypto.price_change_percentage_24h >= 0;
-        return (
-          <motion.li
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: index * 0.04 }}
-            whileHover={{ backgroundColor: "rgba(255,255,255,0.03)" }}
-            onClick={() => (window.location.href = `/trade/${crypto.symbol.toUpperCase()}_USDC`)}
-            key={crypto.id}
-            className="flex items-center justify-between px-3 py-2.5 rounded-lg cursor-pointer transition-colors"
+    <ul className="flex flex-col">
+      {items.map((crypto, index) => (
+        <motion.li
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: 4 }}
+          key={crypto.id}
+          transition={{ duration: 0.25, delay: index * 0.04, ease: EASE_OUT_QUINT }}
+        >
+          <Link
+            className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 outline-none transition-colors duration-150 ease-out hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-foreground/[0.06]"
+            href={`/trade/${crypto.symbol.toUpperCase()}_USDC`}
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full overflow-hidden ring-1 ring-white/10 shrink-0">
-                <Image src={crypto.image} alt={crypto.symbol} width={28} height={28} className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <p className="text-xs font-semibold uppercase text-white/90">{crypto.symbol}</p>
-                <p className="text-[10px] text-white/30 truncate max-w-[80px]">{crypto.name}</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-xs font-medium text-white tabular-nums">{formatCurrency(crypto.current_price)}</p>
-              <p className={`flex items-center justify-end gap-0.5 font-mono text-[10px] mt-0.5 ${up ? "text-[#22c55e]" : "text-[#ef4444]"}`}>
-                {up ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
-                {formatPercentage(crypto.price_change_percentage_24h)}
-              </p>
-            </div>
-          </motion.li>
-        );
-      })}
+            <span className="flex min-w-0 items-center gap-3">
+              <TokenIcon size={32} src={crypto.image} symbol={crypto.symbol} />
+              <span className="flex min-w-0 flex-col gap-1.5">
+                <span className="font-medium text-heading text-sm uppercase leading-none">{crypto.symbol}</span>
+                <span className="truncate text-foreground/40 text-xs leading-none">{crypto.name}</span>
+              </span>
+            </span>
+            <span className="flex flex-col items-end gap-1.5">
+              <span className="num text-heading text-sm leading-none">${formatPrice(crypto.current_price)}</span>
+              <Change className="text-xs leading-none" value={crypto.price_change_percentage_24h} />
+            </span>
+          </Link>
+        </motion.li>
+      ))}
+    </ul>
+  );
+}
+
+function CryptoListSkeleton() {
+  return (
+    <ul className="flex flex-col">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <li className="flex items-center justify-between gap-3 px-3 py-2.5" key={i}>
+          <span className="flex items-center gap-3">
+            <Skeleton className="size-8 rounded-full" />
+            <span className="flex flex-col gap-1.5">
+              <Skeleton className="h-3.5 w-12" />
+              <Skeleton className="h-3 w-20" />
+            </span>
+          </span>
+          <span className="flex flex-col items-end gap-1.5">
+            <Skeleton className="h-3.5 w-20" />
+            <Skeleton className="h-3 w-12" />
+          </span>
+        </li>
+      ))}
     </ul>
   );
 }
@@ -377,142 +355,222 @@ interface CryptoTableRowProps {
   volume: number;
   change: number;
   klineData: LineCryptoDataPoint[] | undefined;
+  favorite: boolean;
+  onToggleFavorite: () => void;
+}
+
+function useFavorites() {
+  const [favorites, setFavorites] = useState<string[]>([]);
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(FAVORITES_KEY) ?? "[]");
+      if (Array.isArray(stored)) setFavorites(stored);
+    } catch {
+      /* storage blocked or malformed: start empty */
+    }
+  }, []);
+  const toggle = (symbol: string) =>
+    setFavorites((current) => {
+      const next = current.includes(symbol) ? current.filter((s) => s !== symbol) : [...current, symbol];
+      try {
+        localStorage.setItem(FAVORITES_KEY, JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  return { favorites, toggle };
 }
 
 function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
-  if (!data) return null;
-  const rows = data
-    .sort((a, b) => b.market_cap - a.market_cap)
-    .slice(0, -5)
-    .filter((item) => !item.symbol.toLowerCase().includes("usdc"));
+  const [view, setView] = useState<"spot" | "favorites">("spot");
+  const [query, setQuery] = useState("");
+  const { favorites, toggle } = useFavorites();
+
+  const rows = useMemo(() => {
+    if (!data) return null;
+    return [...data]
+      .sort((a, b) => b.market_cap - a.market_cap)
+      .slice(0, -5)
+      .filter((item) => !item.symbol.toLowerCase().includes("usdc"));
+  }, [data]);
+
+  const visible = useMemo(() => {
+    if (!rows) return null;
+    const q = query.trim().toLowerCase();
+    return rows.filter(
+      (item) =>
+        (view === "spot" || favorites.includes(item.symbol)) &&
+        (q === "" || item.name.toLowerCase().includes(q) || item.symbol.toLowerCase().includes(q)),
+    );
+  }, [rows, query, view, favorites]);
 
   return (
-    <div className="overflow-x-auto no-scrollbar">
-      <table className="w-full min-w-0">
-        <thead>
-          <tr className="border-b border-white/[0.07]">
-            {[
-              { label: "Name",        hide: "" },
-              { label: "Price",       hide: "" },
-              { label: "Market Cap",  hide: "hidden sm:table-cell" },
-              { label: "24h Volume",  hide: "hidden sm:table-cell" },
-              { label: "24h Change",  hide: "" },
-              { label: "7 Days",      hide: "hidden md:table-cell" },
-            ].map(({ label, hide }, i) => (
-              <th key={label} className={`px-3 sm:px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.14em] text-white/28 ${i <= 1 ? "text-left" : "text-right"} ${hide}`}>
-                {label}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((item, index) => (
-            <CryptoTableRow
-              key={index}
-              image={item.image}
-              name={item.name}
-              symbol={item.symbol}
-              price={item.current_price}
-              marketCap={item.market_cap}
-              volume={item.total_volume}
-              change={item.price_change_percentage_24h}
-              klineData={item.KlineData}
+    <Surface className="scroll-mt-6 overflow-hidden" id="markets">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 pt-6 pb-5">
+        <div className="flex flex-col gap-1.5">
+          <h2 className="font-bold font-runde text-2xl text-heading tracking-tight sm:text-3xl">
+            All markets
+          </h2>
+          <p className="text-foreground/50 text-sm">
+            {rows ? `${rows.length} spot pairs, priced in USDC` : "Loading pairs…"}
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3">
+          <InputGroup className="w-full sm:w-64" data-surface="nested">
+            <InputGroupAddon>
+              <SearchIcon className="size-4 text-foreground/40" strokeWidth={1.5} />
+            </InputGroupAddon>
+            <InputGroupInput
+              aria-label="Search markets"
+              className="font-sans"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search markets"
+              type="search"
+              value={query}
             />
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </InputGroup>
+          <Segmented
+            aria-label="Market list"
+            onValueChange={setView}
+            options={[
+              { value: "spot", label: "Spot" },
+              { value: "favorites", label: "Favorites" },
+            ]}
+            value={view}
+          />
+        </div>
+      </div>
+
+      <Table className="sm:min-w-[640px]">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead className="text-right">Price</TableHead>
+            <TableHead className="text-right max-md:hidden">Market cap</TableHead>
+            <TableHead className="text-right max-md:hidden">24h volume</TableHead>
+            <TableHead className="text-right max-[420px]:hidden">24h change</TableHead>
+            <TableHead className="w-40 text-right max-sm:hidden">7 days</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {visible
+            ? visible.map((item) => (
+                <CryptoTableRow
+                  change={item.price_change_percentage_24h}
+                  favorite={favorites.includes(item.symbol)}
+                  image={item.image}
+                  key={item.id}
+                  klineData={item.KlineData}
+                  marketCap={item.market_cap}
+                  name={item.name}
+                  onToggleFavorite={() => toggle(item.symbol)}
+                  price={item.current_price}
+                  symbol={item.symbol}
+                  volume={item.total_volume}
+                />
+              ))
+            : Array.from({ length: 8 }, (_, i) => (
+                <TableRow className="hover:bg-transparent" key={i}>
+                  <TableCell>
+                    <span className="flex items-center gap-3">
+                      <Skeleton className="size-9 rounded-full" />
+                      <span className="flex flex-col gap-1.5">
+                        <Skeleton className="h-3.5 w-24" />
+                        <Skeleton className="h-3 w-10" />
+                      </span>
+                    </span>
+                  </TableCell>
+                  <TableCell><Skeleton className="ms-auto h-3.5 w-20" /></TableCell>
+                  <TableCell className="max-md:hidden"><Skeleton className="ms-auto h-3.5 w-16" /></TableCell>
+                  <TableCell className="max-md:hidden"><Skeleton className="ms-auto h-3.5 w-16" /></TableCell>
+                  <TableCell className="max-[420px]:hidden"><Skeleton className="ms-auto h-3.5 w-14" /></TableCell>
+                  <TableCell className="max-sm:hidden"><Skeleton className="ms-auto h-8 w-28" /></TableCell>
+                </TableRow>
+              ))}
+        </TableBody>
+      </Table>
+
+      {visible && visible.length === 0 ? (
+        <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
+          <span className="border-apple flex size-10 items-center justify-center rounded-xl bg-surface-hover text-foreground/50">
+            {view === "favorites" && query === "" ? (
+              <StarIcon className="size-[18px]" strokeWidth={1.5} />
+            ) : (
+              <SearchXIcon className="size-[18px]" strokeWidth={1.5} />
+            )}
+          </span>
+          <div className="flex flex-col gap-1">
+            <p className="font-medium text-foreground/80 text-sm">
+              {view === "favorites" && query === "" ? "No favorites yet" : "No markets match"}
+            </p>
+            <p className="text-foreground/40 text-sm">
+              {view === "favorites" && query === ""
+                ? "Star a market and it will be kept here."
+                : "Try a different name or symbol."}
+            </p>
+          </div>
+        </div>
+      ) : null}
+    </Surface>
   );
 }
 
-function CryptoTableRow({ name, image, symbol, price, marketCap, volume, change, klineData }: CryptoTableRowProps) {
+function CryptoTableRow({ name, image, symbol, price, marketCap, volume, change, klineData, favorite, onToggleFavorite }: CryptoTableRowProps) {
+  const router = useRouter();
   const up = change > 0;
+  const href = `/trade/${symbol.toUpperCase()}_USDC`;
+  const series = useMemo(() => (klineData ?? []).map((point) => parseFloat(point.close)), [klineData]);
+
   return (
-    <motion.tr
-      whileHover={{ backgroundColor: "rgba(255,255,255,0.025)" }}
-      className="cursor-pointer transition-colors border-b border-white/[0.05] group"
-      onClick={() => (window.location.href = `/trade/${symbol.toUpperCase()}_USDC`)}
-    >
-      {/* Name */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden ring-1 ring-white/10 bg-white/[0.04] shrink-0">
-            <Image src={image} alt={symbol} width={32} height={32} className="w-full h-full object-cover" />
-          </div>
-          <div>
-            <p className="text-xs sm:text-sm font-semibold text-white">{name}</p>
-            <p className="text-[10px] font-medium uppercase text-white/30">{symbol}</p>
-          </div>
-        </div>
-      </td>
-      {/* Price */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5">
-        <span className="font-mono text-xs sm:text-sm text-white tabular-nums">
-          ${price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+    <TableRow className="group cursor-pointer" onClick={() => router.push(href)}>
+      <TableCell>
+        <span className="flex items-center gap-3">
+          <button
+            aria-label={favorite ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
+            aria-pressed={favorite}
+            className={cn(
+              "-ms-2 inline-flex size-7 cursor-pointer items-center justify-center rounded-full outline-none transition-[color,scale,opacity] duration-150 ease-out hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-90",
+              favorite ? "text-brand" : "text-foreground/25",
+            )}
+            onClick={(event) => {
+              event.stopPropagation();
+              onToggleFavorite();
+            }}
+            type="button"
+          >
+            <StarIcon className="size-4" fill={favorite ? "currentColor" : "none"} strokeWidth={1.5} />
+          </button>
+          <TokenIcon size={36} src={image} symbol={symbol} />
+          <span className="flex flex-col gap-1.5">
+            <Link
+              className="rounded-sm font-medium text-heading leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              href={href}
+              onClick={(event) => event.stopPropagation()}
+            >
+              {name}
+            </Link>
+            <span className="text-foreground/40 text-xs uppercase leading-none">{symbol}</span>
+          </span>
         </span>
-      </td>
-      {/* Market cap - hidden on mobile */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right hidden sm:table-cell">
-        <span className="font-mono text-sm text-white/55 tabular-nums">${formatNumber(marketCap)}</span>
-      </td>
-      {/* Volume - hidden on mobile */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right hidden sm:table-cell">
-        <span className="font-mono text-sm text-white/55 tabular-nums">${formatNumber(volume)}</span>
-      </td>
-      {/* Change */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right">
-        <span className={`inline-flex items-center gap-0.5 sm:gap-1 px-1.5 sm:px-2 py-0.5 rounded text-[10px] sm:text-[11px] font-mono font-semibold ${
-          up
-            ? "text-[#22c55e] bg-[#22c55e]/10 ring-1 ring-[#22c55e]/20"
-            : "text-[#ef4444] bg-[#ef4444]/10 ring-1 ring-[#ef4444]/20"
-        }`}>
-          {up ? <TrendingUp className="w-2.5 h-2.5 sm:w-3 sm:h-3" /> : <TrendingDown className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
-          {up ? "+" : ""}{change?.toFixed(2)}%
-        </span>
-      </td>
-      {/* Sparkline - hidden on mobile */}
-      <td className="px-3 sm:px-5 py-3 sm:py-3.5 justify-end items-center hidden md:table-cell">
-        <div className="flex justify-end">
-          <CryptoLineChart data={klineData ?? []} color={up ? "#22c55e" : "#ef4444"} />
+      </TableCell>
+      <TableCell className="num text-right text-heading">
+        ${formatPrice(price)}
+      </TableCell>
+      <TableCell className="num text-right text-foreground/60 max-md:hidden">${formatNumber(marketCap)}</TableCell>
+      <TableCell className="num text-right text-foreground/60 max-md:hidden">${formatNumber(volume)}</TableCell>
+      <TableCell className="text-right max-[420px]:hidden">
+        <Change value={change ?? 0} />
+      </TableCell>
+      <TableCell className="max-sm:hidden">
+        <div className={cn("ms-auto w-28", up ? "text-buy" : "text-sell")}>
+          {series.length > 1 ? (
+            <Sparkline data={series} height={32} label={`${name}, last 7 days`} />
+          ) : (
+            <span aria-hidden="true" className="block h-8" />
+          )}
         </div>
-      </td>
-    </motion.tr>
+      </TableCell>
+    </TableRow>
   );
 }
-
-// ── SPARKLINE ─────────────────────────────────────────────────────────────────
-
-const formatData = (data: LineCryptoDataPoint[]) =>
-  data.map((point) => ({
-    time: (new Date(point.end).getTime() / 1000) as UTCTimestamp,
-    value: parseFloat(point.close),
-  }));
-
-const CryptoLineChart = ({ data, color }: { data: LineCryptoDataPoint[]; color: string }) => {
-  const chartContainerRef = useRef(null);
-  const chartRef = useRef<IChartApi | null>(null);
-  const formattedData = useMemo(() => formatData(data), [data]);
-
-  useEffect(() => {
-    if (!chartContainerRef.current) return;
-    const chart = createChart(chartContainerRef.current, {
-      height: 36,
-      layout: { background: { type: ColorType.Solid, color: "transparent" }, textColor: "transparent" },
-      watermark: { visible: false },
-      rightPriceScale: { visible: false },
-      timeScale: { visible: false, borderVisible: false },
-      grid: { horzLines: { visible: false }, vertLines: { visible: false } },
-      crosshair: { vertLine: { visible: false }, horzLine: { visible: false } },
-      handleScroll: false,
-      handleScale: false,
-    });
-    chart.priceScale("right").applyOptions({ borderVisible: false });
-    const lineSeries = chart.addLineSeries({ color, lineWidth: 2, lastValueVisible: false, priceLineVisible: false });
-    lineSeries.setData(formattedData);
-    chartRef.current = chart;
-    return () => chart.remove();
-  }, [formattedData, color]);
-
-  if (!data) return <div className="w-28" />;
-  return <div className="w-28 bg-transparent" ref={chartContainerRef} />;
-};

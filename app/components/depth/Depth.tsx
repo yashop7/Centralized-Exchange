@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { ArrowDown, ArrowUp } from "lucide-react";
+import { SectionLabel, Surface, SurfaceHeader } from "@/components/ui/panel";
+import { Segmented } from "@/components/ui/segmented";
+import { cn } from "@/lib/utils";
 import { getDepth, getTicker, getTrades } from "../../utils/httpClient";
-import { BidTable } from "./BidTable";
+import { BidTable, ROWS } from "./BidTable";
 import { AskTable } from "./AskTable";
 import { SignalingManager } from "@/app/utils/SignalingManager";
 
-export function Depth({ market }: { market: string }) {
+export function Depth({ market, className }: { market: string; className?: string }) {
   const [bids, setBids] = useState<[string, string][]>();
   const [asks, setAsks] = useState<[string, string][]>();
   const [trade, setTrade] = useState<[string, string][]>();
@@ -24,8 +27,8 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
   const spreadPct = bestAsk && bestBid ? (((bestAsk - bestBid) / bestAsk) * 100).toFixed(3) : null;
 
   let cumulativeBidVol = 0, cumulativeAskVol = 0;
-  sortedBids.slice(0, 14).forEach(([, q]) => { cumulativeBidVol += parseFloat(q); });
-  sortedAsks.slice(0, 14).forEach(([, q]) => { cumulativeAskVol += parseFloat(q); });
+  sortedBids.slice(0, ROWS).forEach(([, q]) => { cumulativeBidVol += parseFloat(q); });
+  sortedAsks.slice(0, ROWS).forEach(([, q]) => { cumulativeAskVol += parseFloat(q); });
   const totalVol = cumulativeBidVol + cumulativeAskVol;
   const bidPct = totalVol ? (cumulativeBidVol / totalVol) * 100 : 50;
   const askPct = totalVol ? (cumulativeAskVol / totalVol) * 100 : 50;
@@ -87,136 +90,115 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
   }, [market]);
 
   return (
-    <div className="flex flex-col h-full bg-black">
-      {/* Tab bar */}
-      <div className="flex items-center gap-1 px-3 pt-3 pb-0 border-b border-white/10">
-        {(["book", "trades"] as const).map((tab) => (
-          <button
-            key={tab}
-            type="button"
-            onClick={() => setActiveTab(tab)}
-            className={`relative px-3 pb-2.5 text-xs font-medium capitalize transition-colors duration-200 ${
-              activeTab === tab ? "text-white" : "text-white/35 hover:text-white/65"
-            }`}
-          >
-            {tab === "book" ? "Order book" : "Trades"}
-            {activeTab === tab && (
-              <motion.div
-                layoutId="depthTabIndicator"
-                className="absolute inset-x-0 bottom-0 h-px bg-white/50"
-                transition={{ type: "spring", stiffness: 500, damping: 35 }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
+    <Surface className={cn("flex flex-col overflow-hidden", className)}>
+      <SurfaceHeader>
+        <Segmented
+          aria-label="Order book view"
+          onValueChange={setActiveTab}
+          options={[
+            { value: "book", label: "Order book" },
+            { value: "trades", label: "Trades" },
+          ]}
+          size="sm"
+          value={activeTab}
+        />
+      </SurfaceHeader>
 
-
-{/* ORDER BOOK */}
+      {/* ORDER BOOK */}
       {activeTab === "book" && (
-        <div className="flex flex-col flex-1 overflow-hidden">
-          {/* Column headers */}
-          <div className="flex items-center px-3 py-1.5 border-b border-white/[0.05]">
-            <span className="flex-1 text-[9px] font-medium uppercase tracking-widest text-white/25">Price</span>
-            <span className="flex-1 text-[9px] font-medium uppercase tracking-widest text-white/25 text-center">Size</span>
-            <span className="flex-1 text-[9px] font-medium uppercase tracking-widest text-white/25 text-right">Total</span>
+        <div className="flex flex-1 flex-col">
+          <div className="grid grid-cols-3 px-5 pb-2">
+            <SectionLabel>Price</SectionLabel>
+            <SectionLabel className="text-right">Size</SectionLabel>
+            <SectionLabel className="text-right">Total</SectionLabel>
           </div>
 
-          <div className="flex flex-col flex-1 overflow-hidden">
-            {/* Asks — justified to bottom so best ask hugs the mid row */}
-            <div className="flex flex-col flex-1 justify-end overflow-hidden">
-              <AskTable asks={sortedAsks} />
-            </div>
+          {/* Asks: best ask hugs the spread row */}
+          <AskTable asks={sortedAsks} />
 
-            {/* Mid price + spread */}
-            <div className="flex items-center justify-between px-3 py-[5px] bg-white/[0.02] border-y border-white/[0.06] shrink-0">
-              <div className="flex items-center gap-1.5">
-                {priceUp
-                  ? <ArrowUp size={11} className="text-[rgb(0,194,120)]" />
-                  : <ArrowDown size={11} className="text-[rgb(234,56,59)]" />}
-                <span className={`text-sm font-semibold tabular-nums ${priceUp ? "text-[rgb(0,194,120)]" : "text-[rgb(234,56,59)]"}`}>
-                  {price
-                    ? parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                    : "—"}
+          {/* Last price + spread */}
+          <div className="my-1 flex items-center justify-between gap-3 border-hairline border-y px-5 py-3">
+            <div className={cn("flex items-center gap-1.5", priceUp ? "text-buy" : "text-sell")}>
+              <span className="num font-runde font-semibold text-2xl leading-none tracking-tight">
+                {price
+                  ? parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : "—"}
+              </span>
+              {priceUp
+                ? <ArrowUp className="size-3.5" strokeWidth={2} />
+                : <ArrowDown className="size-3.5" strokeWidth={2} />}
+            </div>
+            {spread && (
+              <div className="flex flex-col items-end gap-1 leading-none">
+                <SectionLabel className="text-[10px]">Spread</SectionLabel>
+                <span className="num text-foreground/60 text-xs">
+                  {spread} <span className="text-foreground/30">({spreadPct}%)</span>
                 </span>
               </div>
-              {spread && (
-                <div className="flex items-center gap-1">
-                  <span className="text-[9px] text-white/25">Spread</span>
-                  <span className="text-[10px] text-white/40 tabular-nums">{spread}</span>
-                  <span className="text-[9px] text-white/25 tabular-nums">({spreadPct}%)</span>
-                </div>
-              )}
-            </div>
-
-            {/* Bids */}
-            <div className="flex-1 overflow-hidden">
-              <BidTable bids={sortedBids} />
-            </div>
+            )}
           </div>
 
-          {/* Bid/Ask ratio bar */}
-          <div className="relative w-full h-8 shrink-0 overflow-hidden border-t border-white/[0.06]">
-            <motion.div
-              className="absolute inset-y-0 left-0"
-              style={{ background: 'rgba(0,194,120,0.15)', clipPath: "polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%)" }}
-              animate={{ width: `${bidPct}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            <motion.div
-              className="absolute inset-y-0 right-0"
-              style={{ background: 'rgba(234,56,59,0.12)', clipPath: "polygon(5px 0, 100% 0, 100% 100%, 0 100%)" }}
-              animate={{ width: `${askPct}%` }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold tabular-nums" style={{ color: 'rgb(0,194,120)' }}>
-              {bidPct.toFixed(1)}%
-            </span>
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold tabular-nums" style={{ color: 'rgb(234,56,59)' }}>
-              {askPct.toFixed(1)}%
-            </span>
+          <BidTable bids={sortedBids} />
+
+          {/* Bid / ask balance */}
+          <div className="mt-auto flex items-center gap-3 px-5 pt-4 pb-5">
+            <span className="num w-11 text-buy text-xs">{bidPct.toFixed(1)}%</span>
+            <div className="flex h-1.5 flex-1 gap-0.5 overflow-hidden rounded-full">
+              <motion.div
+                animate={{ width: `${bidPct}%` }}
+                className="h-full rounded-full bg-buy/50"
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+              <motion.div
+                animate={{ width: `${askPct}%` }}
+                className="h-full rounded-full bg-sell/50"
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
+            <span className="num w-11 text-right text-sell text-xs">{askPct.toFixed(1)}%</span>
           </div>
         </div>
       )}
 
       {/* TRADES */}
       {activeTab === "trades" && (
-        <div className="flex flex-col flex-1 overflow-hidden">
-          <div className="flex justify-between px-3 py-1.5 border-b border-white/[0.05]">
-            <span className="text-[9px] font-medium uppercase tracking-widest text-white/25">Price</span>
-            <span className="text-[9px] font-medium uppercase tracking-widest text-white/25">Qty</span>
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex justify-between px-5 pb-2">
+            <SectionLabel>Price</SectionLabel>
+            <SectionLabel>Qty</SectionLabel>
           </div>
-          <div className="overflow-y-auto no-scrollbar flex-1">
-            <AnimatePresence initial={false}>
-              {trade?.map(([tradePrice, qty], i, arr) => {
-                const isUp = parseFloat(tradePrice) >= parseFloat(arr[i + 1]?.[0] ?? tradePrice);
-                return (
-                  <motion.div
-                    key={`${tradePrice}-${i}`}
-                    initial={{ opacity: 0, y: -4 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.12 }}
-                    className="flex justify-between items-center px-3 h-[22px] border-b border-white/[0.03] hover:bg-white/[0.02]"
-                  >
-                    <div className="flex items-center gap-1.5">
-                      {isUp
-                        ? <ArrowUp size={9} style={{ color: 'rgb(0,194,120)' }} />
-                        : <ArrowDown size={9} style={{ color: 'rgb(234,56,59)' }} />}
-                      <span className="text-[11px] tabular-nums" style={{ color: isUp ? 'rgb(0,194,120)' : 'rgb(234,56,59)' }}>
+          {trade?.length ? (
+            <div className="no-scrollbar max-h-[600px] flex-1 overflow-y-auto pb-3">
+              <AnimatePresence initial={false}>
+                {trade.map(([tradePrice, qty], i, arr) => {
+                  const isUp = parseFloat(tradePrice) >= parseFloat(arr[i + 1]?.[0] ?? tradePrice);
+                  return (
+                    <motion.div
+                      animate={{ opacity: 1, y: 0 }}
+                      className="num flex h-6 items-center justify-between px-5 text-[13px] transition-colors duration-150 hover:bg-foreground/[0.03]"
+                      exit={{ opacity: 0 }}
+                      initial={{ opacity: 0, y: -4 }}
+                      key={`${tradePrice}-${i}`}
+                      transition={{ duration: 0.15, ease: "easeOut" }}
+                    >
+                      <span className={cn("flex items-center gap-1.5", isUp ? "text-buy" : "text-sell")}>
+                        {isUp ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
                         {parseFloat(tradePrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </span>
-                    </div>
-                    <span className="font-mono text-[11px] text-white/40 tabular-nums">
-                      {parseFloat(qty).toFixed(4)}
-                    </span>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
+                      <span className="text-foreground/50">{parseFloat(qty).toFixed(4)}</span>
+                    </motion.div>
+                  );
+                })}
+              </AnimatePresence>
+            </div>
+          ) : (
+            <div className="flex flex-1 flex-col items-center justify-center gap-2 px-5 py-16 text-center">
+              <span className="size-1.5 animate-pulse-dot rounded-full bg-foreground/40 text-foreground/40" />
+              <p className="text-foreground/40 text-sm">Waiting for the next trade</p>
+            </div>
+          )}
         </div>
       )}
-    </div>
+    </Surface>
   );
 }

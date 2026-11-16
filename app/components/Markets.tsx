@@ -5,7 +5,7 @@ import { Ticker } from "../utils/types";
 import { getTickers } from "../utils/httpClient";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 export const Markets = () => {
   const [tickers, setTickers] = useState<Ticker[]>();

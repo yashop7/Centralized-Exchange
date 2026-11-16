@@ -3,8 +3,25 @@ import {
   createChart as createLightWeightChart,
   CrosshairMode,
   ISeriesApi,
+  LineStyle,
   UTCTimestamp,
 } from "lightweight-charts";
+
+export interface ChartTheme {
+  /** Axis label colour. */
+  color: string;
+  /** Gridline colour: barely there. */
+  grid: string;
+  /** Crosshair line colour. */
+  crosshair: string;
+  /** Crosshair label background: the accent. */
+  accent: string;
+  up: string;
+  down: string;
+  fontFamily?: string;
+  /** Kept for compatibility; the chart sits on its surface, so this is unused. */
+  background?: string;
+}
 
 export class ChartManager {
   private candleSeries: ISeriesApi<"Candlestick">;
@@ -22,57 +39,69 @@ export class ChartManager {
     close: null,
   };
 
-
-
-  constructor(
-    ref: any,
-    initialData: any[],
-    layout: { background: string; color: string }
-  ) {
+  constructor(ref: any, initialData: any[], layout: ChartTheme) {
     const chart = createLightWeightChart(ref, {
       autoSize: true,
       overlayPriceScales: {
-        ticksVisible: true,
-        borderVisible: true,
+        ticksVisible: false,
+        borderVisible: false,
       },
       crosshair: {
         mode: CrosshairMode.Normal,
+        vertLine: {
+          color: layout.crosshair,
+          width: 1,
+          style: LineStyle.Dashed,
+          labelBackgroundColor: layout.accent,
+        },
+        horzLine: {
+          color: layout.crosshair,
+          width: 1,
+          style: LineStyle.Dashed,
+          labelBackgroundColor: layout.accent,
+        },
       },
       rightPriceScale: {
         visible: true,
-        ticksVisible: true,
+        ticksVisible: false,
         entireTextOnly: true,
-        borderColor: "rgba(255,255,255,0.08)",
+        borderVisible: false,
+        scaleMargins: { top: 0.12, bottom: 0.12 },
       },
       grid: {
         horzLines: {
-          visible: false,
+          visible: true,
+          color: layout.grid,
         },
         vertLines: {
-          visible: false,
+          visible: true,
+          color: layout.grid,
         },
       },
       layout: {
         background: {
           type: ColorType.Solid,
-          color: "#000000",
+          color: "transparent",
         },
-        textColor: "rgba(255,255,255,0.35)",
+        textColor: layout.color,
         fontSize: 11,
+        fontFamily: layout.fontFamily,
       },
       timeScale: {
-        borderColor: "rgba(255,255,255,0.08)",
+        borderVisible: false,
         timeVisible: true,
         secondsVisible: false,
       },
     });
     this.chart = chart;
     this.candleSeries = chart.addCandlestickSeries({
-      upColor: "#22c55e",
-      downColor: "#ef4444",
+      upColor: layout.up,
+      downColor: layout.down,
       borderVisible: false,
-      wickUpColor: "#22c55e",
-      wickDownColor: "#ef4444",
+      wickUpColor: layout.up,
+      wickDownColor: layout.down,
+      priceLineColor: layout.crosshair,
+      priceLineStyle: LineStyle.Dotted,
     });
 
     this.candleSeries.setData(
@@ -81,8 +110,8 @@ export class ChartManager {
         time: (data.timestamp / 1000) as UTCTimestamp,
       }))
     );
+    chart.timeScale().fitContent();
   }
-
 
   public update(updatedPrice: any) {
     if (!this.lastUpdateTime) {
@@ -101,8 +130,6 @@ export class ChartManager {
       this.lastUpdateTime = updatedPrice.time;
     }
   }
-
-
 
   public destroy() {
     this.chart.remove();

@@ -1,10 +1,14 @@
 "use client";
+import { ArrowDownRightIcon, ArrowUpRightIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { NumberTicker } from "@/components/motion/number-ticker";
+import { SectionLabel } from "@/components/ui/panel";
+import { Pill } from "@/components/ui/pill";
+import { TokenPair } from "@/components/ui/token-icon";
+import { cn } from "@/lib/utils";
 import { Ticker } from "../utils/types";
 import { getAllInfo, getTicker } from "../utils/httpClient";
 import { SignalingManager } from "../utils/SignalingManager";
-import { ChevronDown } from "lucide-react";
-import Image from 'next/image';
 
 export const MarketBar = ({ market }: { market: string }) => {
   const [ticker, setTicker] = useState<Ticker | null>(null);
@@ -13,7 +17,7 @@ export const MarketBar = ({ market }: { market: string }) => {
   useEffect(() => {
     async function fetchImage() {
       const data = await getAllInfo();
-      const image = data.find((d: any) => d.symbol.toLowerCase() === market.split("_")[0].toLowerCase())?.image;
+      const image = data?.find((d: any) => d.symbol.toLowerCase() === market.split("_")[0].toLowerCase())?.image;
       settokenImage(image);
     }
     fetchImage();
@@ -50,86 +54,82 @@ export const MarketBar = ({ market }: { market: string }) => {
     parseFloat(num ?? "0").toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
   const isPositive = Number(ticker?.priceChange) >= 0;
+  const [base, quote] = market.split("_");
+  const lastPrice = parseFloat(ticker?.lastPrice ?? "0") || 0;
+  // The feed reports the change as a fraction (0.0123 = 1.23%).
+  const changePercent = Number(ticker?.priceChangePercent ?? 0) * 100;
+  const Arrow = isPositive ? ArrowUpRightIcon : ArrowDownRightIcon;
 
   return (
-    <div className="flex items-center w-full h-14 border-b border-white/10 bg-black px-5 overflow-x-auto no-scrollbar gap-5">
-      {/* Pair */}
-      <TickerButton market={market} tokenImage={tokenImage} />
-
-      {/* Separator */}
-      <div className="h-5 w-px bg-white/10 shrink-0" />
-
-      {/* Last price */}
-      <div className="flex flex-col shrink-0">
-        <span className="text-base font-semibold tabular-nums leading-none" style={{ color: isPositive ? 'rgb(0,194,120)' : 'rgb(234,56,59)' }}>
-          {fmt(ticker?.lastPrice)}
-        </span>
-        <span className="text-[10px] text-white/30 tabular-nums leading-none mt-0.5">
-          ${fmt(ticker?.lastPrice)}
-        </span>
+    <header className="flex flex-col gap-8">
+      {/* Market name. The right padding keeps it clear of the toolbar pill. */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-14 sm:pt-0 sm:pe-72">
+        <TokenPair
+          base={{
+            src: market === "TATA_INR" ? "/TATA.png" : tokenImage || "/sol copy.webp",
+            symbol: base,
+          }}
+          quote={{ src: "/usdc copy.webp", symbol: quote ?? "" }}
+          size={44}
+        />
+        <h1 className="text-balance font-bold font-runde text-4xl text-heading tracking-tight sm:text-5xl md:text-6xl">
+          {base}
+          <span className="px-[0.18em] font-medium text-foreground/25">/</span>
+          {quote}
+        </h1>
       </div>
 
-      {/* Stats */}
-      <div className="flex items-center gap-4 sm:gap-6">
+      <dl className="flex flex-wrap items-end gap-x-10 gap-y-5">
+        <div className="flex flex-col gap-2">
+          <dt>
+            <SectionLabel>Last price</SectionLabel>
+          </dt>
+          <dd className="flex items-center gap-3">
+            <NumberTicker
+              className={cn(
+                "font-runde font-semibold text-3xl tracking-tight transition-colors duration-300",
+                isPositive ? "text-buy" : "text-sell"
+              )}
+              decimals={2}
+              duration={0.5}
+              locale="en-US"
+              startOnView={false}
+              value={lastPrice}
+            />
+            <Pill tone={isPositive ? "buy" : "sell"}>
+              <Arrow />
+              <span className="num">
+                {isPositive ? "+" : ""}
+                {changePercent.toFixed(2)}%
+              </span>
+            </Pill>
+          </dd>
+        </div>
+
         <TickerStat
-          label="24h Change"
+          label="24h change"
           value={
-            <span style={{ color: isPositive ? 'rgb(0,194,120)' : 'rgb(234,56,59)' }}>
-              {isPositive ? "+" : ""}{fmt(ticker?.priceChange)}{" "}
-              <span className="opacity-60">({Number(ticker?.priceChangePercent)?.toFixed(2)}%)</span>
+            <span className={isPositive ? "text-buy" : "text-sell"}>
+              {isPositive ? "+" : ""}
+              {fmt(ticker?.priceChange)}
             </span>
           }
         />
-        <TickerStat label="24h High"   value={fmt(ticker?.high)} className="hidden sm:flex" />
-        <TickerStat label="24h Low"    value={fmt(ticker?.low)} className="hidden sm:flex" />
-        <TickerStat label="24h Volume" value={fmt(ticker?.volume)} className="hidden md:flex" />
-      </div>
-    </div>
+        <TickerStat label="24h high" value={fmt(ticker?.high)} />
+        <TickerStat label="24h low" value={fmt(ticker?.low)} />
+        <TickerStat className="max-sm:hidden" label="24h volume" value={fmt(ticker?.volume)} />
+      </dl>
+    </header>
   );
 };
 
 function TickerStat({ label, value, className = "" }: { label: string; value: React.ReactNode; className?: string }) {
   return (
-    <div className={`flex flex-col shrink-0 ${className}`}>
-      <span className="text-[9px] font-medium uppercase tracking-widest text-white/28 leading-none mb-1">
-        {label}
-      </span>
-      <span className="font-mono text-xs font-medium tabular-nums text-white/80 leading-none">
-        {value}
-      </span>
+    <div className={cn("flex flex-col gap-2 pb-1", className)}>
+      <dt>
+        <SectionLabel>{label}</SectionLabel>
+      </dt>
+      <dd className="num text-[15px] text-foreground leading-none">{value}</dd>
     </div>
-  );
-}
-
-function TickerButton({ market, tokenImage }: { market: string; tokenImage: string | null }) {
-  return (
-    <button type="button" className="flex items-center gap-2.5 shrink-0 group">
-      <div className="flex items-center">
-        <div className="relative z-10 w-6 h-6 rounded-full overflow-hidden ring-1 ring-white/10 bg-white/[0.06]">
-          <Image
-            alt="Base token"
-            loading="lazy"
-            decoding="async"
-            width={24} height={24}
-            className="w-full h-full object-cover"
-            src={market === "TATA_INR" ? "/TATA.png" : tokenImage || "/sol copy.webp"}
-          />
-        </div>
-        <div className="relative -ml-2 w-6 h-6 rounded-full overflow-hidden ring-1 ring-white/10 bg-white/[0.06]">
-          <Image
-            alt="Quote token"
-            loading="lazy"
-            decoding="async"
-            width={24} height={24}
-            className="w-full h-full object-cover"
-            src="/usdc copy.webp"
-          />
-        </div>
-      </div>
-      <span className="text-sm font-semibold text-white tracking-tight">
-        {market.replace("_", " / ")}
-      </span>
-      <ChevronDown className="w-3.5 h-3.5 text-white/30 group-hover:text-white/60 transition-colors" />
-    </button>
   );
 }

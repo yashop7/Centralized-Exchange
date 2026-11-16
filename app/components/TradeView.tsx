@@ -1,4 +1,11 @@
+"use client";
+
+import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
+import { Pill } from "@/components/ui/pill";
+import { Surface, SurfaceHeader, SurfaceTitle } from "@/components/ui/panel";
+import { cn } from "@/lib/utils";
+import { useShell } from "./shell/ShellContext";
 import { ChartManager } from "../utils/ChartManager";
 import { getKlines, RateLimitError } from "../utils/httpClient";
 import { KLine } from "../utils/types";
@@ -23,9 +30,39 @@ function generateDummyKlines(count = 120, basePrice = 1000): { open: number; hig
   return candles;
 }
 
-export function TradeView({ market }: { market: string }) {
+function readChartTheme() {
+  const root = getComputedStyle(document.documentElement);
+  const read = (name: string) => root.getPropertyValue(name).trim();
+  return {
+    color: read("--chart-text"),
+    grid: read("--chart-grid"),
+    crosshair: read("--subtle"),
+    accent: read("--brand"),
+    up: read("--buy"),
+    down: read("--sell"),
+    fontFamily: `${getComputedStyle(document.body).getPropertyValue("--font-geist-mono").trim()}, ui-monospace, monospace`,
+  };
+}
+
+export function TradeView({
+  market,
+  className,
+}: {
+  market: string;
+  className?: string;
+}) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartManagerRef = useRef<ChartManager>(null);
+  const { resolvedTheme } = useTheme();
+  const { setFullscreenTarget } = useShell();
+
+  // Offer the chart to the toolbar's fullscreen button while this page is up.
+  useEffect(() => {
+    setFullscreenTarget(
+      chartRef.current?.closest<HTMLElement>('[data-slot="surface"]') ?? null
+    );
+    return () => setFullscreenTarget(null);
+  }, [setFullscreenTarget]);
 
   useEffect(() => {
     const init = async () => {
@@ -62,21 +99,31 @@ export function TradeView({ market }: { market: string }) {
       if (chartRef.current) {
         chartManagerRef.current?.destroy();
         // @ts-ignore
-        chartManagerRef.current = new ChartManager(chartRef.current, data, {
-          background: "#000000",
-          color: "rgba(255,255,255,0.35)",
-        });
+        chartManagerRef.current = new ChartManager(
+          chartRef.current,
+          data,
+          readChartTheme()
+        );
       }
     };
 
     init();
-  }, [market, chartRef]);
+  }, [market, chartRef, resolvedTheme]);
 
   return (
-    <div
-      ref={chartRef}
-      className="font-inter w-full h-[260px] sm:h-[360px] lg:h-[75vh]"
-      style={{ marginTop: 4 }}
-    />
+    <Surface
+      className={cn("flex min-h-[380px] flex-col overflow-hidden", className)}
+    >
+      <SurfaceHeader>
+        <SurfaceTitle>Price</SurfaceTitle>
+        <div className="flex items-center gap-2">
+          <Pill>1H candles</Pill>
+          <Pill>10D</Pill>
+        </div>
+      </SurfaceHeader>
+      <div className="min-h-0 flex-1 px-2 pb-2">
+        <div className="size-full" ref={chartRef} />
+      </div>
+    </Surface>
   );
 }
