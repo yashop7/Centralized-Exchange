@@ -67,7 +67,7 @@ export function ChipButton({
     <button
       aria-pressed={active}
       className={cn(
-        "border-apple inline-flex h-7 cursor-pointer items-center justify-center rounded-full px-3 font-medium text-xs outline-none transition-[background-color,color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.96] disabled:pointer-events-none disabled:opacity-40 motion-reduce:active:scale-100",
+        "tap-target border-apple inline-flex h-7 cursor-pointer items-center justify-center rounded-full px-3 font-medium text-xs outline-none transition-[background-color,color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.96] disabled:pointer-events-none disabled:opacity-40 motion-reduce:active:scale-100",
         active
           ? "bg-surface-hover text-heading"
           : "bg-surface text-foreground/50 hover:bg-surface-hover hover:text-heading",

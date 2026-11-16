@@ -56,7 +56,7 @@ export function DepthRow({
           key={flash}
         />
       ) : null}
-      <div className="num relative grid h-full grid-cols-3 items-center px-5 text-[13px] leading-none transition-colors duration-150 group-hover:bg-foreground/[0.03]">
+      <div className="num relative grid h-full grid-cols-3 items-center px-4 text-[13px] sm:px-5 leading-none transition-colors duration-150 group-hover:bg-foreground/[0.03]">
         <span className={buy ? "text-buy" : "text-sell"}>
           {parseFloat(price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
         </span>

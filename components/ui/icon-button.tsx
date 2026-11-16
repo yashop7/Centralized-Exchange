@@ -41,7 +41,7 @@ export function IconButton({
             aria-label={label}
             aria-pressed={active || undefined}
             className={cn(
-              "inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/80 outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:stroke-[1.5]",
+              "tap-target inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/80 outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.94] disabled:pointer-events-none disabled:opacity-40 motion-reduce:active:scale-100 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:stroke-[1.5]",
               size === "default"
                 ? "size-10 [&_svg:not([class*='size-'])]:size-[18px]"
                 : "size-8 [&_svg:not([class*='size-'])]:size-4",

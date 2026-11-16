@@ -116,7 +116,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ShellContext.Provider value={shell}>
-      <div className="isolate flex min-h-dvh flex-col p-2 md:p-3 lg:flex-row">
+      <div className="isolate flex min-h-dvh flex-col p-1.5 sm:p-2 md:p-3 lg:flex-row">
         {/* Desktop sidebar: lives on the black canvas, outside the card */}
         <AnimatePresence initial={false}>
           {!sidebarCollapsed ? (
@@ -134,7 +134,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </AnimatePresence>
 
         {/* Mobile bar */}
-        <div className="flex items-center justify-between px-3 pt-2 pb-3 lg:hidden">
+        <div className="flex items-center justify-between ps-4 pe-2.5 pt-[max(0.5rem,env(safe-area-inset-top))] pb-3 sm:px-5 lg:hidden">
           <div className="flex items-center gap-3">
             <Logo />
             <span className="font-medium text-[15px] text-heading">
@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-1">
             <button
               aria-label="Search"
-              className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-foreground/70 outline-none transition-colors duration-150 hover:bg-surface hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-foreground/70 outline-none transition-colors duration-150 hover:bg-surface hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-surface active:text-heading"
               onClick={() => setCommandOpen(true)}
               type="button"
             >
@@ -152,7 +152,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </button>
             <button
               aria-label="Open navigation"
-              className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-foreground/70 outline-none transition-colors duration-150 hover:bg-surface hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="inline-flex size-11 cursor-pointer items-center justify-center rounded-full text-foreground/70 outline-none transition-colors duration-150 hover:bg-surface hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-surface active:text-heading"
               onClick={() => setDrawerOpen(true)}
               type="button"
             >
@@ -163,7 +163,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* The floating card */}
         <Panel className="flex min-h-[calc(100dvh-5rem)] min-w-0 flex-1 flex-col lg:min-h-[calc(100dvh-1.5rem)]">
-          <div className="pointer-events-none absolute top-4 right-4 z-30 md:top-6 md:right-6">
+          <div className="pointer-events-none absolute top-3 right-3 z-30 sm:top-4 sm:right-4 md:top-6 md:right-6">
             <Toolbar className="pointer-events-auto" />
           </div>
           {children}

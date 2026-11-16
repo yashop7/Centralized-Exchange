@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { DepthRow } from "./DepthRow";
 
 export const ROWS = 11;
@@ -24,8 +25,8 @@ export const BidTable = ({ bids }: { bids: [string, string][] }) => {
 
   return (
     <div
-      className={`overflow-hidden ${isDemoMode ? "pointer-events-none select-none opacity-30" : ""}`}
-      style={{ height: `${ROWS * ROW_HEIGHT}px` }}
+      className={`h-(--rows-height) overflow-hidden max-sm:h-auto max-sm:max-h-48 ${isDemoMode ? "pointer-events-none select-none opacity-30" : ""}`}
+      style={{ "--rows-height": `${ROWS * ROW_HEIGHT}px` } as CSSProperties}
     >
       {rows.map(([price, quantity, total]) => (
         <DepthRow key={price} maxTotal={maxTotal} price={price} quantity={quantity} side="buy" total={total} />

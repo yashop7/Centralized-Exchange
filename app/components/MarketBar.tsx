@@ -61,33 +61,37 @@ export const MarketBar = ({ market }: { market: string }) => {
   const Arrow = isPositive ? ArrowUpRightIcon : ArrowDownRightIcon;
 
   return (
-    <header className="flex flex-col gap-8">
+    <header className="flex flex-col gap-5 sm:gap-8">
       {/* Market name. The right padding keeps it clear of the toolbar pill. */}
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-14 sm:pt-0 sm:pe-72">
-        <TokenPair
-          base={{
-            src: market === "TATA_INR" ? "/TATA.png" : tokenImage || "/sol copy.webp",
-            symbol: base,
-          }}
-          quote={{ src: "/usdc copy.webp", symbol: quote ?? "" }}
-          size={44}
-        />
-        <h1 className="text-balance font-bold font-runde text-4xl text-heading tracking-tight sm:text-5xl md:text-6xl">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-3 pt-13 sm:gap-x-5 sm:pt-0 sm:pe-72">
+        {[32, 44].map((size) => (
+          <span className={size === 32 ? "flex sm:hidden" : "hidden sm:flex"} key={size}>
+            <TokenPair
+              base={{
+                src: market === "TATA_INR" ? "/TATA.png" : tokenImage || "/sol copy.webp",
+                symbol: base,
+              }}
+              quote={{ src: "/usdc copy.webp", symbol: quote ?? "" }}
+              size={size}
+            />
+          </span>
+        ))}
+        <h1 className="text-balance font-bold font-runde text-3xl text-heading tracking-tight sm:text-5xl md:text-6xl">
           {base}
           <span className="px-[0.18em] font-medium text-foreground/25">/</span>
           {quote}
         </h1>
       </div>
 
-      <dl className="flex flex-wrap items-end gap-x-10 gap-y-5">
-        <div className="flex flex-col gap-2">
+      <dl className="grid grid-cols-3 items-end gap-x-4 gap-y-4 sm:flex sm:flex-wrap sm:gap-x-10 sm:gap-y-5">
+        <div className="col-span-3 flex flex-col gap-2">
           <dt>
             <SectionLabel>Last price</SectionLabel>
           </dt>
           <dd className="flex items-center gap-3">
             <NumberTicker
               className={cn(
-                "font-runde font-semibold text-3xl tracking-tight transition-colors duration-300",
+                "font-runde font-semibold text-2xl tabular-nums tracking-tight transition-colors duration-300 sm:text-3xl",
                 isPositive ? "text-buy" : "text-sell"
               )}
               decimals={2}
@@ -125,11 +129,11 @@ export const MarketBar = ({ market }: { market: string }) => {
 
 function TickerStat({ label, value, className = "" }: { label: string; value: React.ReactNode; className?: string }) {
   return (
-    <div className={cn("flex flex-col gap-2 pb-1", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-2 pb-1", className)}>
       <dt>
         <SectionLabel>{label}</SectionLabel>
       </dt>
-      <dd className="num text-[15px] text-foreground leading-none">{value}</dd>
+      <dd className="num truncate text-[15px] text-foreground leading-none">{value}</dd>
     </div>
   );
 }

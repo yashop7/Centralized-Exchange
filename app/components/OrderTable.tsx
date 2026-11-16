@@ -43,7 +43,7 @@ export function OrderTable({
   return (
     <Surface className="overflow-hidden">
       <Tabs className="gap-0" defaultValue="orders">
-        <div className="flex items-center justify-between px-5 pt-4 pb-3">
+        <div className="flex items-center justify-between px-4 pt-4 pb-3 sm:px-5">
           <TabsList>
             <TabsTab className="h-8 px-4" value="orders">
               Open orders
@@ -64,6 +64,48 @@ export function OrderTable({
               title="No open orders"
             />
           ) : (
+            <>
+            {/* Phones: one stacked card per order, nothing to scroll sideways */}
+            <ul className="sm:hidden">
+              {aggregated.map((order) => {
+                const pct = order.quantity > 0 ? Math.min(100, (order.filled / order.quantity) * 100) : 0;
+                return (
+                  <li className="flex flex-col gap-3 border-hairline border-t px-4 py-3.5" key={order.orderId}>
+                    <div className="flex items-center justify-between gap-3">
+                      <span className="flex items-center gap-2.5">
+                        <TokenIcon size={24} src="/TATA.png" symbol="TATA" />
+                        <span className="font-medium text-heading">TATA</span>
+                      </span>
+                      <Pill tone={order.side === "buy" ? "buy" : "sell"}>
+                        {order.side === "buy" ? <ArrowUpIcon /> : <ArrowDownIcon />}
+                        {order.side === "buy" ? "Buy" : "Sell"}
+                      </Pill>
+                    </div>
+                    <dl className="grid grid-cols-3 gap-x-4">
+                      {[
+                        { label: "Price", value: order.price, strong: true },
+                        { label: "Quantity", value: order.quantity },
+                        { label: "Filled", value: order.filled },
+                      ].map(({ label, value, strong }) => (
+                        <div className="flex min-w-0 flex-col gap-1.5 last:items-end" key={label}>
+                          <dt className="label-caps text-[11px]">{label}</dt>
+                          <dd className={`num truncate text-sm leading-none ${strong ? "text-heading" : "text-foreground/70"}`}>
+                            {value}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                    <span aria-hidden="true" className="h-1 overflow-hidden rounded-full bg-foreground/10">
+                      <span
+                        className="block h-full rounded-full bg-foreground/50 transition-[width] duration-300 ease-out"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className="max-sm:hidden">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -109,6 +151,8 @@ export function OrderTable({
                 })}
               </TableBody>
             </Table>
+            </div>
+            </>
           )}
         </TabsPanel>
 
@@ -127,7 +171,7 @@ export function OrderTable({
                     <span className="flex items-center gap-3">
                       <TokenIcon size={24} src={src} symbol={symbol} />
                       <span className="font-medium text-heading">{symbol}</span>
-                      <span className="text-foreground/40">{name}</span>
+                      <span className="text-foreground/40 max-sm:hidden">{name}</span>
                     </span>
                   </TableCell>
                   <TableCell className="num text-right text-heading">{value}</TableCell>

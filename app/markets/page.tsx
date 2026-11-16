@@ -27,7 +27,7 @@ import {
   SurfaceHeader,
   SurfaceTitle,
 } from "@/components/ui/panel";
-import { Pill } from "@/components/ui/pill";
+import { ChipButton, Pill } from "@/components/ui/pill";
 import { Segmented } from "@/components/ui/segmented";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -142,31 +142,31 @@ export default function Component() {
     : null;
 
   return (
-    <div className="hero-glow @container flex flex-1 flex-col gap-12 overflow-hidden rounded-[inherit] p-5 md:p-8 xl:p-10">
+    <div className="hero-glow @container flex flex-1 flex-col gap-6 overflow-hidden rounded-[inherit] p-4 sm:gap-12 sm:p-5 md:p-8 xl:p-10">
       {/* ── HERO ─────────────────────────────────────────────── */}
-      <section className="grid items-center gap-x-12 gap-y-10 pt-16 sm:pt-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] @5xl:pt-14">
+      <section className="grid items-center gap-x-12 gap-y-8 pt-14 sm:gap-y-10 sm:pt-12 @5xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)] @5xl:pt-14">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-start gap-6"
+          className="flex flex-col items-start gap-5 sm:gap-6"
           initial={{ opacity: 0, y: 8 }}
           transition={{ duration: 0.5, ease: EASE_OUT_QUINT }}
         >
           <Pill dot live tone="buy">
             Live markets
           </Pill>
-          <h1 className="text-balance font-bold font-runde text-4xl text-heading tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="text-balance font-bold font-runde text-[2rem] text-heading tracking-tight max-sm:leading-[1.1] sm:text-5xl md:text-6xl">
             Trade crypto, without limits.
           </h1>
           <p className="max-w-[46ch] text-muted-foreground">
             Real-time order books, limit and market orders, deep liquidity.
             Built for traders who demand precision.
           </p>
-          <div className="flex flex-wrap items-center gap-3 pt-2">
-            <Button render={<Link href="/trade/TATA_INR" />} size="lg">
+          <div className="flex w-full flex-col gap-3 pt-2 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
+            <Button className="max-sm:w-full" render={<Link href="/trade/TATA_INR" />} size="lg">
               Start trading
               <ArrowRightIcon />
             </Button>
-            <Button render={<a href="#markets" />} size="lg" variant="secondary">
+            <Button className="max-sm:w-full" render={<a href="#markets" />} size="lg" variant="secondary">
               View markets
             </Button>
           </div>
@@ -176,16 +176,16 @@ export default function Component() {
       </section>
 
       {/* ── STATS ────────────────────────────────────────────── */}
-      <section className="grid grid-cols-2 gap-4 @4xl:grid-cols-4">
+      <section className="grid grid-cols-2 gap-3 sm:gap-4 @4xl:grid-cols-4">
         {[
           { label: "24h volume", value: "$84.2B", delta: "+6.4%", up: true },
           { label: "Market cap", value: "$2.41T", delta: "+2.1%", up: true },
           { label: "Active markets", value: "1,248", delta: "Live", up: true },
           { label: "BTC dominance", value: "52.3%", delta: "-0.4%", up: false },
         ].map(({ label, value, delta, up }) => (
-          <Surface className="flex flex-col gap-3 p-5" key={label}>
+          <Surface className="flex flex-col gap-3 p-4 sm:p-5" key={label}>
             <SectionLabel>{label}</SectionLabel>
-            <div className="flex items-baseline justify-between gap-3">
+            <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
               <span className="font-runde font-semibold text-2xl text-heading tabular-nums tracking-tight sm:text-3xl">
                 {value}
               </span>
@@ -200,7 +200,7 @@ export default function Component() {
         className="group rounded-2xl outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
         href="/trade/TATA_INR"
       >
-        <Surface className="flex items-center justify-between gap-4 p-5 transition-colors duration-150 ease-out group-hover:bg-surface-hover group-active:scale-[0.995]">
+        <Surface className="flex items-center justify-between gap-4 p-4 transition-colors sm:p-5 duration-150 ease-out group-hover:bg-surface-hover group-active:scale-[0.995]">
           <div className="flex min-w-0 items-center gap-4">
             <TokenIcon size={44} src="/TATA.png" symbol="TATA" />
             <div className="flex min-w-0 flex-col gap-1.5">
@@ -230,7 +230,7 @@ export default function Component() {
       </Link>
 
       {/* ── THREE LISTS ──────────────────────────────────────── */}
-      <section className="grid gap-4 @3xl:grid-cols-2 @6xl:grid-cols-3">
+      <section className="grid gap-3 sm:gap-4 @3xl:grid-cols-2 @6xl:grid-cols-3">
         {(panels ?? PANEL_PLACEHOLDERS).map(({ label, icon, items }) => (
           <Surface className="flex flex-col" key={label}>
             <SurfaceHeader>
@@ -301,7 +301,7 @@ function CryptoList({ items }: { items: CryptoData[] }) {
           transition={{ duration: 0.25, delay: index * 0.04, ease: EASE_OUT_QUINT }}
         >
           <Link
-            className="flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 outline-none transition-colors duration-150 ease-out hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-foreground/[0.06]"
+            className="flex min-h-12 items-center justify-between gap-3 rounded-xl px-2 py-2.5 outline-none sm:px-3 transition-colors duration-150 ease-out hover:bg-foreground/[0.04] focus-visible:ring-2 focus-visible:ring-ring/50 active:bg-foreground/[0.06]"
             href={`/trade/${crypto.symbol.toUpperCase()}_USDC`}
           >
             <span className="flex min-w-0 items-center gap-3">
@@ -382,9 +382,20 @@ function useFavorites() {
   return { favorites, toggle };
 }
 
+type SortKey = "cap" | "gainers" | "losers" | "volume" | "price";
+
+const SORTS: { key: SortKey; label: string; pick: (item: CombinedCryptoData) => number }[] = [
+  { key: "cap", label: "Market cap", pick: (item) => item.market_cap },
+  { key: "gainers", label: "Top gainers", pick: (item) => item.price_change_percentage_24h },
+  { key: "losers", label: "Top losers", pick: (item) => -item.price_change_percentage_24h },
+  { key: "volume", label: "Volume", pick: (item) => item.total_volume },
+  { key: "price", label: "Price", pick: (item) => item.current_price },
+];
+
 function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
   const [view, setView] = useState<"spot" | "favorites">("spot");
   const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<SortKey>("cap");
   const { favorites, toggle } = useFavorites();
 
   const rows = useMemo(() => {
@@ -398,25 +409,29 @@ function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
   const visible = useMemo(() => {
     if (!rows) return null;
     const q = query.trim().toLowerCase();
-    return rows.filter(
+    const filtered = rows.filter(
       (item) =>
         (view === "spot" || favorites.includes(item.symbol)) &&
         (q === "" || item.name.toLowerCase().includes(q) || item.symbol.toLowerCase().includes(q)),
     );
-  }, [rows, query, view, favorites]);
+    // "cap" is the order the rows already come in.
+    if (sort === "cap") return filtered;
+    const pick = SORTS.find((s) => s.key === sort)!.pick;
+    return [...filtered].sort((a, b) => (pick(b) || 0) - (pick(a) || 0));
+  }, [rows, query, view, favorites, sort]);
 
   return (
     <Surface className="scroll-mt-6 overflow-hidden" id="markets">
-      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 px-6 pt-6 pb-5">
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4 px-4 pt-5 pb-4 sm:px-6 sm:pt-6 sm:pb-5">
         <div className="flex flex-col gap-1.5">
-          <h2 className="font-bold font-runde text-2xl text-heading tracking-tight sm:text-3xl">
+          <h2 className="font-bold font-runde text-xl text-heading tracking-tight sm:text-3xl">
             All markets
           </h2>
           <p className="text-foreground/50 text-sm">
             {rows ? `${rows.length} spot pairs, priced in USDC` : "Loading pairs…"}
           </p>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
           <InputGroup className="w-full sm:w-64" data-surface="nested">
             <InputGroupAddon>
               <SearchIcon className="size-4 text-foreground/40" strokeWidth={1.5} />
@@ -432,6 +447,7 @@ function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
           </InputGroup>
           <Segmented
             aria-label="Market list"
+            className="max-sm:flex max-sm:w-full max-sm:*:flex-1"
             onValueChange={setView}
             options={[
               { value: "spot", label: "Spot" },
@@ -442,6 +458,88 @@ function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
         </div>
       </div>
 
+      {/* Phones: sort chips in a sideways scroller, then a tappable list */}
+      <div className="relative sm:hidden">
+        <div
+          aria-label="Sort markets"
+          className="no-scrollbar flex snap-x gap-2 overflow-x-auto px-4 pb-3 [mask-image:linear-gradient(to_right,#000_calc(100%-40px),transparent)]"
+          role="group"
+        >
+          {SORTS.map(({ key, label }) => (
+            <ChipButton
+              active={sort === key}
+              className="h-8 shrink-0 snap-start px-3.5 text-[13px] last:me-8"
+              key={key}
+              onClick={() => setSort(key)}
+            >
+              {label}
+            </ChipButton>
+          ))}
+        </div>
+      </div>
+
+      <ul className="sm:hidden">
+        {visible
+          ? visible.map((item) => {
+              const favorite = favorites.includes(item.symbol);
+              const change = item.price_change_percentage_24h ?? 0;
+              return (
+                <li className="relative flex min-h-14 items-center border-hairline border-t" key={item.id}>
+                  <button
+                    aria-label={favorite ? `Remove ${item.name} from favorites` : `Add ${item.name} to favorites`}
+                    aria-pressed={favorite}
+                    className={cn(
+                      "z-10 inline-flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full outline-none transition-[color,scale] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-90",
+                      favorite ? "text-brand" : "text-foreground/25",
+                    )}
+                    onClick={() => toggle(item.symbol)}
+                    type="button"
+                  >
+                    <StarIcon className="size-4" fill={favorite ? "currentColor" : "none"} strokeWidth={1.5} />
+                  </button>
+                  {/* The link stretches over the whole row; the star sits above it */}
+                  <Link
+                    className="flex min-w-0 flex-1 items-center justify-between gap-3 py-2.5 pe-4 outline-none after:absolute after:inset-0 focus-visible:after:ring-2 focus-visible:after:ring-ring/50 focus-visible:after:ring-inset active:after:bg-foreground/[0.04]"
+                    href={`/trade/${item.symbol.toUpperCase()}_USDC`}
+                  >
+                    <span className="flex min-w-0 items-center gap-3">
+                      <TokenIcon size={36} src={item.image} symbol={item.symbol} />
+                      <span className="flex min-w-0 flex-col gap-1.5">
+                        <span className="truncate font-medium text-heading leading-none">{item.name}</span>
+                        <span className="num truncate text-foreground/40 text-xs leading-none">
+                          <span className="font-sans uppercase">{item.symbol}</span> · Vol ${formatNumber(item.total_volume)}
+                        </span>
+                      </span>
+                    </span>
+                    <span className="flex shrink-0 flex-col items-end gap-1.5">
+                      <span className="num text-heading text-sm leading-none">${formatPrice(item.current_price)}</span>
+                      <Pill className="num" size="sm" tone={change >= 0 ? "buy" : "sell"}>
+                        {change >= 0 ? "+" : "-"}
+                        {formatPercentage(Math.abs(change))}
+                      </Pill>
+                    </span>
+                  </Link>
+                </li>
+              );
+            })
+          : Array.from({ length: 8 }, (_, i) => (
+              <li className="flex min-h-14 items-center justify-between gap-3 border-hairline border-t px-4" key={i}>
+                <span className="flex items-center gap-3">
+                  <Skeleton className="size-9 rounded-full" />
+                  <span className="flex flex-col gap-1.5">
+                    <Skeleton className="h-3.5 w-24" />
+                    <Skeleton className="h-3 w-16" />
+                  </span>
+                </span>
+                <span className="flex flex-col items-end gap-1.5">
+                  <Skeleton className="h-3.5 w-20" />
+                  <Skeleton className="h-4 w-14 rounded-full" />
+                </span>
+              </li>
+            ))}
+      </ul>
+
+      <div className="max-sm:hidden">
       <Table className="sm:min-w-[640px]">
         <TableHeader>
           <TableRow>
@@ -490,6 +588,7 @@ function CryptoTable({ data }: { data: CombinedCryptoData[] | null }) {
               ))}
         </TableBody>
       </Table>
+      </div>
 
       {visible && visible.length === 0 ? (
         <div className="flex flex-col items-center gap-3 px-6 py-16 text-center">
@@ -530,7 +629,7 @@ function CryptoTableRow({ name, image, symbol, price, marketCap, volume, change,
             aria-label={favorite ? `Remove ${name} from favorites` : `Add ${name} to favorites`}
             aria-pressed={favorite}
             className={cn(
-              "-ms-2 inline-flex size-7 cursor-pointer items-center justify-center rounded-full outline-none transition-[color,scale,opacity] duration-150 ease-out hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-90",
+              "tap-target -ms-2 inline-flex size-7 cursor-pointer items-center justify-center rounded-full outline-none transition-[color,scale,opacity] duration-150 ease-out hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-90",
               favorite ? "text-brand" : "text-foreground/25",
             )}
             onClick={(event) => {
@@ -544,7 +643,7 @@ function CryptoTableRow({ name, image, symbol, price, marketCap, volume, change,
           <TokenIcon size={36} src={image} symbol={symbol} />
           <span className="flex flex-col gap-1.5">
             <Link
-              className="rounded-sm font-medium text-heading leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+              className="tap-target rounded-sm font-medium text-heading leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               href={href}
               onClick={(event) => event.stopPropagation()}
             >

@@ -71,7 +71,7 @@ export function Toolbar({ className }: { className?: string }) {
       role="toolbar"
     >
       <button
-        className="inline-flex h-10 cursor-pointer items-center rounded-full px-4 font-medium text-foreground/80 text-sm outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.97]"
+        className="tap-target inline-flex h-10 cursor-pointer items-center rounded-full px-4 font-medium text-foreground/80 text-sm outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.97]"
         onClick={openDeposit}
         type="button"
       >
@@ -109,7 +109,7 @@ export function Toolbar({ className }: { className?: string }) {
           render={
             <button
               aria-label="Settings"
-              className="inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/80 outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.94] data-popup-open:bg-surface-hover data-popup-open:text-heading [&_svg]:size-[18px] [&_svg]:stroke-[1.5]"
+              className="tap-target inline-flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full text-foreground/80 outline-none transition-[background-color,color,scale] duration-150 ease-out hover:bg-surface-hover hover:text-heading focus-visible:ring-2 focus-visible:ring-ring/50 active:scale-[0.94] data-popup-open:bg-surface-hover data-popup-open:text-heading [&_svg]:size-[18px] [&_svg]:stroke-[1.5]"
               type="button"
             />
           }

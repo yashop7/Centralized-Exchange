@@ -85,7 +85,7 @@ export function Segmented<T extends string>({
           <button
             aria-checked={active}
             className={cn(
-              "relative z-0 inline-flex cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-full font-medium outline-none transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/50",
+              "tap-target relative z-0 inline-flex cursor-pointer select-none items-center justify-center gap-1.5 whitespace-nowrap rounded-full font-medium outline-none transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-ring/50",
               size === "default" ? "h-9 px-5 text-sm" : "h-7 px-3.5 text-xs",
               fill && "flex-1",
               active ? TEXT[tone] : "text-foreground/50 hover:text-foreground/80",

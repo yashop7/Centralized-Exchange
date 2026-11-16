@@ -350,6 +350,47 @@
     var(--tw-shadow, 0 0 #0000);
 }
 
+/* 44px hit area on touch screens, without changing how the control looks */
+@layer components {
+  @media (pointer: coarse) {
+    .tap-target {
+      position: relative;
+    }
+    .tap-target::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: max(100%, 44px);
+      height: max(100%, 44px);
+      translate: -50% -50%;
+    }
+  }
+}
+
+/* iOS zooms the page when a focused field is under 16px */
+@media (width < 40rem), (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+/* Tooltips are a hover affordance; on touch they open on tap and stick */
+@media (hover: none) {
+  [data-slot="tooltip-positioner"] {
+    display: none;
+  }
+}
+
+/* Toasts sit above the trade page's sticky Buy / Sell bar */
+@media (width < 40rem) {
+  body:has([data-slot="trade-bar"]) [data-slot="toast-viewport"] {
+    bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 /* lightweight-charts attribution mark */
 #tv-attr-logo {
   display: none !important;

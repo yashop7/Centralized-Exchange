@@ -23,14 +23,20 @@ export function SwapUI({
   balance,
   inr,
   className,
+  initialSide = "buy",
+  bare = false,
 }: {
   market: string;
   balance: string;
   inr: string;
   className?: string;
+  /** Side the form opens on (the phone's Buy / Sell bar sets it). */
+  initialSide?: "buy" | "sell";
+  /** No card chrome: the form sits inside the phone's bottom sheet. */
+  bare?: boolean;
 }) {
   const { toast } = useToast();
-  const [activeTab, setActiveTab] = useState("buy");
+  const [activeTab, setActiveTab] = useState<string>(initialSide);
   const [type, setType] = useState("limit");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
@@ -41,6 +47,7 @@ export function SwapUI({
   const isBuy = activeTab === "buy";
   const available = market === "TATA_INR";
   const base = market.split("_")[0];
+  const Container = bare ? "div" : Surface;
 
   // Percentage chips: a share of what the balance can cover on this side.
   const maxQuantity = isBuy
@@ -54,7 +61,7 @@ export function SwapUI({
   };
 
   return (
-    <Surface className={cn("flex flex-col gap-5 p-5", className)}>
+    <Container className={cn("flex flex-col gap-5", !bare && "p-5", className)}>
       {/* Buy / Sell */}
       <Segmented
         aria-label="Side"
@@ -208,7 +215,7 @@ export function SwapUI({
             { id: "ioc", label: "IOC" },
           ].map(({ id, label }) => (
             <label
-              className="flex cursor-pointer select-none items-center gap-2.5 text-foreground/50 text-sm transition-colors duration-150 hover:text-foreground/80"
+              className="tap-target flex cursor-pointer select-none items-center gap-2.5 text-foreground/50 text-sm transition-colors duration-150 hover:text-foreground/80 active:text-foreground/80"
               key={id}
             >
               <Checkbox id={id} />
@@ -217,7 +224,7 @@ export function SwapUI({
           ))}
         </div>
       </div>
-    </Surface>
+    </Container>
   );
 }
 

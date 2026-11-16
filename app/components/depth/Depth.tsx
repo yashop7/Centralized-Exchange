@@ -11,7 +11,16 @@ import { BidTable, ROWS } from "./BidTable";
 import { AskTable } from "./AskTable";
 import { SignalingManager } from "@/app/utils/SignalingManager";
 
-export function Depth({ market, className }: { market: string; className?: string }) {
+export function Depth({
+  market,
+  className,
+  mobileView,
+}: {
+  market: string;
+  className?: string;
+  /** Phones pick the pane from the page's Chart / Book / Trades switch instead of the tabs in this header. */
+  mobileView?: "book" | "trades";
+}) {
   const [bids, setBids] = useState<[string, string][]>();
   const [asks, setAsks] = useState<[string, string][]>();
   const [trade, setTrade] = useState<[string, string][]>();
@@ -89,9 +98,17 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
     };
   }, [market]);
 
+  // Which pane shows: the header tabs from `sm` up, `mobileView` below it.
+  const paneClass = (pane: "book" | "trades") =>
+    mobileView
+      ? cn(activeTab !== pane && "sm:hidden", mobileView !== pane && "max-sm:hidden")
+      : undefined;
+  const showPane = (pane: "book" | "trades") =>
+    activeTab === pane || mobileView === pane;
+
   return (
     <Surface className={cn("flex flex-col overflow-hidden", className)}>
-      <SurfaceHeader>
+      <SurfaceHeader className={mobileView ? "max-sm:hidden" : undefined}>
         <Segmented
           aria-label="Order book view"
           onValueChange={setActiveTab}
@@ -105,9 +122,9 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
       </SurfaceHeader>
 
       {/* ORDER BOOK */}
-      {activeTab === "book" && (
-        <div className="flex flex-1 flex-col">
-          <div className="grid grid-cols-3 px-5 pb-2">
+      {showPane("book") && (
+        <div className={cn("flex flex-1 flex-col", mobileView && "max-sm:pt-4", paneClass("book"))}>
+          <div className="grid grid-cols-3 px-4 pb-2 sm:px-5">
             <SectionLabel>Price</SectionLabel>
             <SectionLabel className="text-right">Size</SectionLabel>
             <SectionLabel className="text-right">Total</SectionLabel>
@@ -117,7 +134,7 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
           <AskTable asks={sortedAsks} />
 
           {/* Last price + spread */}
-          <div className="my-1 flex items-center justify-between gap-3 border-hairline border-y px-5 py-3">
+          <div className="my-1 flex items-center justify-between gap-3 border-hairline border-y px-4 py-3 sm:px-5">
             <div className={cn("flex items-center gap-1.5", priceUp ? "text-buy" : "text-sell")}>
               <span className="num font-runde font-semibold text-2xl leading-none tracking-tight">
                 {price
@@ -141,7 +158,7 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
           <BidTable bids={sortedBids} />
 
           {/* Bid / ask balance */}
-          <div className="mt-auto flex items-center gap-3 px-5 pt-4 pb-5">
+          <div className="mt-auto flex items-center gap-3 px-4 pt-4 pb-4 sm:px-5 sm:pb-5">
             <span className="num w-11 text-buy text-xs">{bidPct.toFixed(1)}%</span>
             <div className="flex h-1.5 flex-1 gap-0.5 overflow-hidden rounded-full">
               <motion.div
@@ -161,21 +178,21 @@ const sortedAsks = asks ? [...asks].sort((a, b) => parseFloat(a[0]) - parseFloat
       )}
 
       {/* TRADES */}
-      {activeTab === "trades" && (
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex justify-between px-5 pb-2">
+      {showPane("trades") && (
+        <div className={cn("flex min-h-0 flex-1 flex-col", mobileView && "max-sm:pt-4", paneClass("trades"))}>
+          <div className="flex justify-between px-4 pb-2 sm:px-5">
             <SectionLabel>Price</SectionLabel>
             <SectionLabel>Qty</SectionLabel>
           </div>
           {trade?.length ? (
-            <div className="no-scrollbar max-h-[600px] flex-1 overflow-y-auto pb-3">
+            <div className="no-scrollbar max-h-[45dvh] flex-1 overflow-y-auto pb-3 sm:max-h-[600px]">
               <AnimatePresence initial={false}>
                 {trade.map(([tradePrice, qty], i, arr) => {
                   const isUp = parseFloat(tradePrice) >= parseFloat(arr[i + 1]?.[0] ?? tradePrice);
                   return (
                     <motion.div
                       animate={{ opacity: 1, y: 0 }}
-                      className="num flex h-6 items-center justify-between px-5 text-[13px] transition-colors duration-150 hover:bg-foreground/[0.03]"
+                      className="num flex h-6 items-center justify-between px-4 text-[13px] sm:px-5 transition-colors duration-150 hover:bg-foreground/[0.03]"
                       exit={{ opacity: 0 }}
                       initial={{ opacity: 0, y: -4 }}
                       key={`${tradePrice}-${i}`}

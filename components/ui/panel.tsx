@@ -11,7 +11,7 @@ export function Panel({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "border-apple relative rounded-[28px] bg-card md:rounded-[45px]",
+        "border-apple relative rounded-[24px] bg-card sm:rounded-[28px] md:rounded-[45px]",
         className,
       )}
       data-slot="panel"
@@ -38,7 +38,7 @@ export function SurfaceHeader({
   return (
     <div
       className={cn(
-        "flex min-h-14 items-center justify-between gap-3 px-5 py-3",
+        "flex min-h-14 items-center justify-between gap-3 px-4 py-3 sm:px-5",
         className,
       )}
       data-slot="surface-header"
