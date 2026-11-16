@@ -94,7 +94,7 @@ export function SwapUI({
         <dl className="border-apple flex flex-col rounded-xl bg-background/40">
           {[
             { src: "/usdc copy.webp", symbol: "USDC", value: parseFloat(balance || "0").toFixed(2) },
-            { src: "/TATA.png", symbol: "TATA", value: parseFloat(inr || "0").toFixed(7) },
+            { src: "/tata-token.svg", symbol: "TATA", value: parseFloat(inr || "0").toFixed(7) },
           ].map(({ src, symbol, value }) => (
             <div
               className="flex items-center justify-between border-hairline px-4 py-3 not-last:border-b"

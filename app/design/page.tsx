@@ -508,7 +508,7 @@ export default function DesignPage() {
                     <TableRow key={i}>
                       <TableCell>
                         <span className="flex items-center gap-3">
-                          <TokenIcon size={24} src="/TATA.png" symbol="TATA" />
+                          <TokenIcon size={24} src="/tata-token.svg" symbol="TATA" />
                           <span className="font-medium text-heading">{market}</span>
                         </span>
                       </TableCell>

@@ -37,7 +37,7 @@ export function OrderTable({
 
   const balances = [
     { src: "/usdc copy.webp", symbol: "USDC", name: "USD Coin", value: parseFloat(balance || "0").toFixed(2) },
-    { src: "/TATA.png", symbol: "TATA", name: "Tata", value: parseFloat(inr || "0").toFixed(7) },
+    { src: "/tata-token.svg", symbol: "TATA", name: "Tata", value: parseFloat(inr || "0").toFixed(7) },
   ];
 
   return (
@@ -73,7 +73,7 @@ export function OrderTable({
                   <li className="flex flex-col gap-3 border-hairline border-t px-4 py-3.5" key={order.orderId}>
                     <div className="flex items-center justify-between gap-3">
                       <span className="flex items-center gap-2.5">
-                        <TokenIcon size={24} src="/TATA.png" symbol="TATA" />
+                        <TokenIcon size={24} src="/tata-token.svg" symbol="TATA" />
                         <span className="font-medium text-heading">TATA</span>
                       </span>
                       <Pill tone={order.side === "buy" ? "buy" : "sell"}>
@@ -123,7 +123,7 @@ export function OrderTable({
                     <TableRow key={order.orderId}>
                       <TableCell>
                         <span className="flex items-center gap-3">
-                          <TokenIcon size={24} src="/TATA.png" symbol="TATA" />
+                          <TokenIcon size={24} src="/tata-token.svg" symbol="TATA" />
                           <span className="font-medium text-heading">TATA</span>
                         </span>
                       </TableCell>

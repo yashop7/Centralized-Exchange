@@ -68,7 +68,7 @@ export const MarketBar = ({ market }: { market: string }) => {
           <span className={size === 32 ? "flex sm:hidden" : "hidden sm:flex"} key={size}>
             <TokenPair
               base={{
-                src: market === "TATA_INR" ? "/TATA.png" : tokenImage || "/sol copy.webp",
+                src: market === "TATA_INR" ? "/tata-token.svg" : tokenImage || "/sol copy.webp",
                 symbol: base,
               }}
               quote={{ src: "/usdc copy.webp", symbol: quote ?? "" }}

@@ -202,7 +202,7 @@ export default function Component() {
       >
         <Surface className="flex items-center justify-between gap-4 p-4 transition-colors sm:p-5 duration-150 ease-out group-hover:bg-surface-hover group-active:scale-[0.995]">
           <div className="flex min-w-0 items-center gap-4">
-            <TokenIcon size={44} src="/TATA.png" symbol="TATA" />
+            <TokenIcon size={44} src="/tata-token.svg" symbol="TATA" />
             <div className="flex min-w-0 flex-col gap-1.5">
               <div className="flex items-center gap-2.5">
                 <span className="font-runde font-semibold text-heading text-lg leading-none tracking-tight">
