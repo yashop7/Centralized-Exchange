@@ -10,6 +10,7 @@ import {
   SunMoonIcon,
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -135,12 +136,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
         {/* Mobile bar */}
         <div className="flex items-center justify-between ps-4 pe-2.5 pt-[max(0.5rem,env(safe-area-inset-top))] pb-3 sm:px-5 lg:hidden">
-          <div className="flex items-center gap-3">
+          <Link
+            aria-label="Exchange home"
+            className="-ms-2 flex min-h-11 items-center gap-3 rounded-lg ps-2 pe-3 outline-none focus-visible:ring-2 focus-visible:ring-ring/50 active:opacity-80"
+            href="/markets"
+          >
             <Logo />
             <span className="font-medium text-[15px] text-heading">
               Exchange
             </span>
-          </div>
+          </Link>
           <div className="flex items-center gap-1">
             <button
               aria-label="Search"
