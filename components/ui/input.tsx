@@ -34,7 +34,7 @@ export function Input({
       className={
         cn(
           !unstyled &&
-            "border-apple relative inline-flex w-full items-center rounded-xl bg-surface ring-ring/50 transition-[box-shadow,background-color] duration-150 ease-out has-focus-visible:ring-2 has-disabled:opacity-50 has-aria-invalid:ring-2 has-aria-invalid:ring-sell/50 has-[[data-size=sm]]:rounded-[10px] in-data-[surface=nested]:bg-background/40",
+            "border-apple relative inline-flex w-full items-center rounded-xl bg-field ring-ring/50 transition-[box-shadow,background-color] duration-150 ease-out has-focus-visible:ring-2 has-disabled:opacity-50 has-aria-invalid:ring-2 has-aria-invalid:ring-sell/50 has-[[data-size=sm]]:rounded-[10px] in-data-[surface=nested]:bg-background/40",
           className,
         ) || undefined
       }

@@ -26,7 +26,7 @@ export interface SegmentedProps<T extends string>
 }
 
 const THUMB: Record<Tone, string> = {
-  neutral: "color-mix(in srgb, var(--surface-hover) 100%, transparent)",
+  neutral: "color-mix(in srgb, var(--thumb) 100%, transparent)",
   buy: "color-mix(in srgb, var(--buy) 15%, transparent)",
   sell: "color-mix(in srgb, var(--sell) 15%, transparent)",
 };
